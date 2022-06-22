@@ -1,0 +1,4 @@
+1. Create project with CRA
+2. Add Redux, create store with switch-case reducers or with createSlice reducers
+3. Add graphql, pass apollo client with provider
+4. * for codegen

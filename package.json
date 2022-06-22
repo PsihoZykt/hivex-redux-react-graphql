@@ -2,6 +2,7 @@
   "name": "hivex-redux-react-graphql",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@apollo/client": "^3.6.8",
     "@graphql-codegen/cli": "^2.6.2",
@@ -16,7 +17,14 @@
     "@types/node": "^16.11.41",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
+    "apollo-server-express": "^3.9.0",
+    "concurrently": "^7.2.2",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "express": "^4.18.1",
     "graphql": "^16.5.0",
+    "mongoose": "^6.4.0",
+    "nodemon": "^2.0.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.2",
@@ -26,10 +34,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "server": "nodemon index.js",
+    "client": "npm run start --prefix client",
+    "client:install": "npm install --prefix client",
+    "client:build": "npm run build --prefix client",
+    "dev": "cross-env NODE_ENV=development concurrently \"npm run server\" \"npm run client\"",
     "generate": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
