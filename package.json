@@ -35,7 +35,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=production node index.js",
+    "start": "npm run build --prefix client && cross-env NODE_ENV=production node index.js",
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
     "client:install": "npm install --prefix client",
