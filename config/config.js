@@ -9,6 +9,6 @@ export const environment = {
     },
     production: {
         serverURL: `http://localhost:${PORT}/`,
-        dbString: 'mongodb://localhost:27017/graphqlTutorial-prod'
+        dbString: 'mongodb+srv://psihoz_ykt:${process.env.DB_PASS}@cluster0.rp2fj.gcp.mongodb.net/?retryWrites=true&w=majority'
     }
 }
