@@ -9,6 +9,6 @@ export const environment = {
     },
     production: {
         serverURL: `http://localhost:${PORT}/`,
-        dbString: 'mongodb+srv://psihoz_ykt:${process.env.DB_PASS}@cluster0.rp2fj.gcp.mongodb.net/?retryWrites=true&w=majority'
+        dbString: `mongodb+srv://psihoz_ykt:${process.env.DB_PASS}@cluster0.rp2fj.gcp.mongodb.net/?retryWrites=true&w=majority`
     }
 }
