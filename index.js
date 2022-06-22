@@ -4,7 +4,11 @@ import {resolvers} from "./data/resolvers.graphql.js";
 import {typeDefs} from "./data/schema.graphql.js";
 import {PORT} from "./config/config.js";
 import cors from "cors";
+import path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
 
+const __dirname = path.dirname(__filename);
 /**
  * Create an Apollo server instance.
  */
