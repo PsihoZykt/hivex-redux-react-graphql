@@ -1,23 +1,16 @@
-import React from 'react';
-import {gql, useQuery} from "@apollo/client";
-
-const EXCHANGE_RATES = gql`
-query{
-  getFriends{
-    id
-    firstName
-    lastName
-  }
-}
-`;
+import React, {useEffect} from 'react';
+import {useFriendQuery} from "./generated/graphql";
 
 function App() {
-  const {loading, error, data} = useQuery(EXCHANGE_RATES);
-
+  const {data, loading} = useFriendQuery();
+  useEffect(() => {
+    if (!loading) {
+      console.log(loading, data)
+    }
+  })
   return (
     <div className="App">
       Hello world
-      <div onClick={() => console.log(data)}> Click me </div>
     </div>
   );
 }
