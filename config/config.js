@@ -9,7 +9,7 @@ export const environment = {
         dbString: `mongodb+srv://psihoz_ykt:xmcqmdmjxslaogf@cluster0.rp2fj.gcp.mongodb.net/?retryWrites=true&w=majority`
     },
     production: {
-        serverURL: `http://localhost:${PORT}/`,
+        serverURL: `https://hivex-redux-graphql.herokuapp.com/:${PORT}/`,
         dbString: `mongodb+srv://psihoz_ykt:xmcqmdmjxslaogf@cluster0.rp2fj.gcp.mongodb.net/?retryWrites=true&w=majority`
     }
 }
