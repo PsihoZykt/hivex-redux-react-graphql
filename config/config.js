@@ -1,6 +1,7 @@
 // import {config} from "dotenv";
 
-export const PORT = process.env.port || 8080;
+export const PORT = process.env.PORT || 8080;
+console.log(PORT)
 // config();
 export const environment = {
     development: {
