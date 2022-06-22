@@ -7,7 +7,7 @@ import cors from "cors";
 import path from 'path'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
-
+// console.log(process.env.DB_PASS)
 const __dirname = path.dirname(__filename);
 /**
  * Create an Apollo server instance.

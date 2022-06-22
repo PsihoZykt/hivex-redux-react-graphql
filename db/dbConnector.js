@@ -7,7 +7,7 @@ const env = process.env.NODE_ENV || "development";
 /**
  * Mongoose Connection
  **/
-
+console.log(env)
 mongoose.connect(environment[env].dbString, {
     useNewUrlParser: true,
     useUnifiedTopology: true
