@@ -9,7 +9,8 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 const client = new ApolloClient({
-  uri: 'https://hivex-redux-graphql.herokuapp.com/graphql',
+  // uri: 'https://hivex-redux-graphql.herokuapp.com/graphql',
+  uri: 'http://localhost:8080/graphql',
   cache: new InMemoryCache()
 
 });

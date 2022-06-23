@@ -1,5 +1,21 @@
-query Friend {
-getFriends {
-  lastName
+query ExampleQuery {
+  getProject {
+    name
+    worker {
+      name,
+      role,
+      project {
+        mentor {
+          techStack
+        }
+      }
+    }
+  }
 }
+mutation Currency($currencies: CurrencyInput) {
+  addCurrency( currencies: $currencies ){
+name
+code
+
+  }
 }

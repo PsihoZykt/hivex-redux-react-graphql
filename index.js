@@ -5,14 +5,17 @@ import {typeDefs} from "./data/schema.graphql.js";
 import {PORT} from "./config/config.js";
 import cors from "cors";
 import path from 'path'
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
+
 const __filename = fileURLToPath(import.meta.url);
 // console.log(process.env.DB_PASS)
 const __dirname = path.dirname(__filename);
 /**
  * Create an Apollo server instance.
  */
-const server = new ApolloServer({typeDefs, resolvers});
+const server = new ApolloServer({typeDefs, resolvers
+    // mocks: true
+});
 
 /**
  * Create an express server and apply the Apollo Server middleware

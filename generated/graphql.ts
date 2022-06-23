@@ -25,89 +25,123 @@ export type Contact = {
   lastName?: Maybe<Scalars['String']>;
 };
 
-export type ContactInput = {
-  firstName?: InputMaybe<Scalars['String']>;
-  lastName?: InputMaybe<Scalars['String']>;
+export type Currency = {
+  __typename?: 'Currency';
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
 };
 
-export type Friend = {
-  __typename?: 'Friend';
-  age?: Maybe<Scalars['Int']>;
-  contacts?: Maybe<Array<Maybe<Contact>>>;
-  email?: Maybe<Scalars['String']>;
-  firstName?: Maybe<Scalars['String']>;
-  gender?: Maybe<Gender>;
-  id?: Maybe<Scalars['ID']>;
-  language?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
+export type CurrencyInput = {
+  code?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
-export type FriendInput = {
-  age?: InputMaybe<Scalars['Int']>;
-  contacts?: InputMaybe<Array<InputMaybe<ContactInput>>>;
-  email?: InputMaybe<Scalars['String']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  gender?: InputMaybe<Gender>;
-  language?: InputMaybe<Scalars['String']>;
-  lastName?: InputMaybe<Scalars['String']>;
-};
-
-export enum Gender {
-  Female = 'FEMALE',
-  Male = 'MALE',
-  Other = 'OTHER'
+export enum Level {
+  Junior = 'junior',
+  Middle = 'middle',
+  Senior = 'senior'
 }
+
+export type Mentor = {
+  __typename?: 'Mentor';
+  country?: Maybe<Scalars['String']>;
+  level?: Maybe<Level>;
+  name?: Maybe<Scalars['String']>;
+  salary?: Maybe<Scalars['Int']>;
+  techStack?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['Int']>;
+  workDuration?: Maybe<Scalars['Int']>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addFriend?: Maybe<Friend>;
-  addSeries?: Maybe<Series>;
+  addCurrency?: Maybe<Currency>;
+  addUser?: Maybe<User>;
 };
 
 
-export type MutationAddFriendArgs = {
-  friend?: InputMaybe<FriendInput>;
+export type MutationAddCurrencyArgs = {
+  currencies?: InputMaybe<CurrencyInput>;
 };
 
 
-export type MutationAddSeriesArgs = {
-  series?: InputMaybe<SeriesInput>;
+export type MutationAddUserArgs = {
+  users?: InputMaybe<UserInput>;
+};
+
+export type Project = {
+  __typename?: 'Project';
+  country?: Maybe<Scalars['String']>;
+  duration?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['ID']>;
+  mentor?: Maybe<Mentor>;
+  name?: Maybe<Scalars['String']>;
+  status?: Maybe<ProjectStatus>;
+  techStack?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['Int']>;
+  worker?: Maybe<User>;
+};
+
+export type ProjectInput = {
+  country?: InputMaybe<Scalars['String']>;
+  duration?: InputMaybe<Scalars['Int']>;
+  mentor?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<ProjectStatus>;
+  techStack?: InputMaybe<Scalars['String']>;
+  timestamp?: InputMaybe<Scalars['Int']>;
+  worker?: InputMaybe<Scalars['String']>;
+};
+
+export enum ProjectStatus {
+  Active = 'active',
+  Closed = 'closed',
+  Open = 'open'
+}
+
+export type Proxy = {
+  __typename?: 'Proxy';
+  bank?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  currency?: Maybe<Currency>;
+  name?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['Int']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  findAFriend?: Maybe<Friend>;
-  findASeries?: Maybe<Series>;
-  getFriends?: Maybe<Array<Maybe<Friend>>>;
-  getSeries?: Maybe<Array<Maybe<Series>>>;
+  getCurrencies?: Maybe<Array<Maybe<Currency>>>;
+  getMentors?: Maybe<Array<Maybe<Mentor>>>;
+  getProject?: Maybe<Array<Maybe<Project>>>;
+  getProxies?: Maybe<Array<Maybe<Proxy>>>;
+  getUsers?: Maybe<Array<Maybe<User>>>;
 };
 
-
-export type QueryFindAFriendArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryFindASeriesArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-export enum Rating {
-  One = 'ONE',
-  Three = 'THREE',
-  Two = 'TWO'
+export enum Role {
+  Mentor = 'mentor',
+  Worker = 'worker'
 }
 
-export type Series = {
-  __typename?: 'Series';
+export type User = {
+  __typename?: 'User';
   id?: Maybe<Scalars['ID']>;
-  rating?: Maybe<Rating>;
-  seriesName?: Maybe<Scalars['String']>;
-  year?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  project?: Maybe<Project>;
+  proxy?: Maybe<Proxy>;
+  role?: Maybe<Role>;
+  salary?: Maybe<Scalars['Int']>;
+  techStack?: Maybe<Scalars['String']>;
+  timeStamp?: Maybe<Scalars['Int']>;
+  workDuration?: Maybe<Scalars['Int']>;
 };
 
-export type SeriesInput = {
-  rating?: InputMaybe<Rating>;
-  seriesName?: InputMaybe<Scalars['String']>;
-  year?: InputMaybe<Scalars['Int']>;
+export type UserInput = {
+  level?: InputMaybe<Level>;
+  name?: InputMaybe<Scalars['String']>;
+  project?: InputMaybe<ProjectInput>;
+  proxy?: InputMaybe<Scalars['String']>;
+  salary?: InputMaybe<Scalars['Int']>;
+  techStack?: InputMaybe<Scalars['String']>;
+  timestamp?: InputMaybe<Scalars['Int']>;
+  workDuration?: InputMaybe<Scalars['Int']>;
 };

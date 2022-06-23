@@ -1,4 +1,4 @@
-import { Friends, Series } from "../db/dbConnector.js";
+import {Currencies,  Mentors, Projects, Proxies, Users} from "../db/dbConnector.js";
 
 /**
  * GraphQL Resolvers
@@ -6,63 +6,142 @@ import { Friends, Series } from "../db/dbConnector.js";
 
 export const resolvers = {
   Query: {
-    getFriends: (root) => {
+
+    getUsers: (root, {id}) => {
       return new Promise((resolve, reject) => {
-        Friends.find((err, friends) => {
-          if (err) reject(err);
-          else resolve(friends);
-        });
-      });
+        Users.findOne({_id: id} , (err, users) => {
+          if(err) reject(err);
+          else resolve(users)
+        })
+      })
     },
-    getSeries: (root) => {
+    getProject: (root, {id}) => {
       return new Promise((resolve, reject) => {
-        Series.find((err, series) => {
-          if (err) reject(err);
-          else resolve(series);
-        });
-      });
+        Projects.findOne({_id: id} , (err, projects) => {
+          if(err) reject(err);
+          else resolve(projects)
+        })
+      })
     },
-    findAFriend: (root, { id }) => {
+    getMentors: (root, {id}) => {
       return new Promise((resolve, reject) => {
-        Friends.findOne({ _id: id }, (err, friend) => {
-          if (err) reject(err);
-          else resolve(friend);
-        });
-      });
+        Mentors.findOne({_id: id} , (err, mentors) => {
+          if(err) reject(err);
+          else resolve(mentors)
+        })
+      })
     },
-    findASeries: (root, { id }) => {
+    getProxies: (root, {id}) => {
       return new Promise((resolve, reject) => {
-        Series.findOne({ _id: id }, (err, series) => {
-          if (err) reject(err);
-          else resolve(series);
-        });
-      });
+        Proxies.findOne({_id: id} , (err, proxies) => {
+          if(err) reject(err);
+          else resolve(proxies)
+        })
+      })
     },
+    getCurrencies: (root, {id}) => {
+      return new Promise((resolve, reject) => {
+        Currencies.findOne({_id: id} , (err, currencies) => {
+          if(err) reject(err);
+          else resolve(currencies)
+        })
+      })
+    },
+
+
+
+
   },
   Mutation: {
-    addFriend: (root, { friend }) => {
-      const { ...rest } = friend;
-      const newFriend = new Friends({ ...rest });
-
-      return new Promise((resolve, reject) => {
-        newFriend.save((err, friend) => {
-          if (err) reject(err);
-          else resolve(friend);
-        });
-      });
-    },
-    addSeries: (root, { series }) => {
-      const { ...rest } = series;
-      const newSeries = new Series({
+    // addFriend: (root, { friend }) => {
+    //   const { ...rest } = friend;
+    //   const newFriend = new Friends({ ...rest });
+    //
+    //   return new Promise((resolve, reject) => {
+    //     newFriend.save((err, friend) => {
+    //       if (err) reject(err);
+    //       else resolve(friend);
+    //     });
+    //   });
+    // },
+    // addSeries: (root, { series }) => {
+    //   const { ...rest } = series;
+    //   const newSeries = new Series({
+    //     ...rest,
+    //   });
+    //
+    //   return new Promise((resolve, reject) => {
+    //     newSeries.save((err, series) => {
+    //       if (err) reject(err);
+    //       resolve(series);
+    //     });
+    //   });
+    // },
+    addUser: (root, { user }) => {
+      const { ...rest } = user;
+      const newUsers = new Users({
         ...rest,
       });
 
       return new Promise((resolve, reject) => {
-        newSeries.save((err, series) => {
+        newUsers.save((err, users) => {
           if (err) reject(err);
-          resolve(series);
+          resolve(users);
         });
       });
     },
+    // addProject: (root, { project }) => {
+    //   const { ...rest } = project;
+    //   const newProjects = new Projects({
+    //     ...rest,
+    //   });
+    //
+    //   return new Promise((resolve, reject) => {
+    //     newProjects.save((err, projects) => {
+    //       if (err) reject(err);
+    //       resolve(projects);
+    //     });
+    //   });
+    // },
+    // addMentor: (root, { mentors }) => {
+    //   const { ...rest } = mentors;
+    //   const newMentors = new Mentors({
+    //     ...rest,
+    //   });
+    //
+    //   return new Promise((resolve, reject) => {
+    //     newMentors.save((err, mentors) => {
+    //       if (err) reject(err);
+    //       resolve(mentors);
+    //     });
+    //   });
+    // },
+    // addProxy: (root, { proxies }) => {
+    //   const { ...rest } = proxies;
+    //   const newProxies = new Proxies({
+    //     ...rest,
+    //   });
+    //
+    //   return new Promise((resolve, reject) => {
+    //     newProxies.save((err, proxies) => {
+    //       if (err) reject(err);
+    //       resolve(proxies);
+    //     });
+    //   });
+    // },
+    addCurrency: (root, { currencies }) => {
+      const { ...rest } =  currencies;
+      const newCurrencies = new Currencies({
+        ...rest,
+      });
+
+      return new Promise((resolve, reject) => {
+        newCurrencies.save((err, currencies) => {
+          if (err) reject(err);
+          resolve(currencies);
+        });
+      });
+    },
+
   },
 };

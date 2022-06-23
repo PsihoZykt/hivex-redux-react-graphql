@@ -1,71 +1,108 @@
-import { gql } from "apollo-server-express";
+import {gql} from "apollo-server-express";
 
 export const typeDefs = gql`
-  type Friend {
-    id: ID
-    firstName: String
-    lastName: String
-    gender: Gender
-    language: String
-    age: Int
-    email: String
-    contacts: [Contact]
-  }
 
+  type User {
+  id: ID,
+  name: String,
+  proxy: Proxy,
+  salary: Int, 
+  project: Project,
+  workDuration: Int,
+  role: Role,
+  techStack: String,
+  timeStamp: Int,
+  }
+    type Project {
+    id: ID,
+    name: String,
+    worker: User,
+    status: ProjectStatus,
+    mentor: Mentor,
+    country: String,
+    duration: Int,
+    timestamp: Int,
+    techStack: String
+    }
+    type Mentor {
+    name: String,
+    level: Level,
+    workDuration: Int,
+    salary: Int,
+    country: String,
+    timestamp: Int,
+    techStack: String
+    }
+    type Proxy {
+    name: String,
+    country: String,
+    timestamp: Int,
+    bank: String,
+    currency: Currency
+    }
+    type Currency {
+    name: String,
+    code: String
+    }
   type Contact {
     firstName: String
     lastName: String
   }
+enum ProjectStatus {
+open
+active
+closed
+}
 
-  type Series {
-    id: ID
-    seriesName: String
-    year: Int
-    rating: Rating
+enum Role {
+mentor
+worker
+}
+enum Level {
+junior
+middle
+senior
+}
+
+  
+  input CurrencyInput {
+  name: String,
+  code: String,
   }
-
-  enum Rating {
-    ONE
-    TWO
-    THREE
+  input UserInput {
+  name: String,
+  proxy: String,
+  salary: Int,
+  project: ProjectInput,
+  workDuration: Int,
+  level: Level,
+  timestamp: Int,
+  techStack: String
   }
-
-  enum Gender {
-    MALE
-    FEMALE
-    OTHER
-  }
-
-  input SeriesInput {
-    seriesName: String
-    year: Int
-    rating: Rating
-  }
-
-  input FriendInput {
-    firstName: String
-    lastName: String
-    gender: Gender
-    language: String
-    age: Int
-    email: String
-    contacts: [ContactInput]
-  }
-
-  input ContactInput {
-    firstName: String
-    lastName: String
-  }
-
+input ProjectInput {
+name: String,
+worker: String,
+status: ProjectStatus,
+mentor: String,
+country: String,
+duration: Int,
+timestamp: Int,
+techStack: String
+}
   type Query {
-    getFriends: [Friend]
-    getSeries: [Series]
-    findAFriend(id: String): Friend
-    findASeries(id: String): Series
+ 
+    getProject: [Project]
+    getMentors: [Mentor]
+    getProxies: [Proxy]
+    getCurrencies: [Currency]
+    
+  getUsers: [User]
   }
+  
 
   type Mutation {
-    addFriend(friend: FriendInput): Friend
-    addSeries(series: SeriesInput): Series
+  
+    addCurrency(currencies: CurrencyInput): Currency
+    addUser(users: UserInput): User
   }
 `;

@@ -1,6 +1,11 @@
 import {environment} from "../config/config.js";
-import {friendSchema} from "./schema/friendSchema.js";
-import {seriesSchema} from "./schema/seriesSchema.js";
+import {
+    currencySchema,
+    mentorSchema,
+    projectSchema,
+    proxySchema,
+    userSchema
+} from "./schema/schemas.js";
 import mongoose from "mongoose";
 const env = process.env.NODE_ENV || "development";
 
@@ -18,7 +23,11 @@ db.on('error', () => {
     console.error("Error while connecting to DB");
 });
 
-const Friends = mongoose.model('Friends', friendSchema);
-const Series = mongoose.model('Series', seriesSchema);
 
-export {Friends, Series};
+const Users = mongoose.model('Users', userSchema)
+const Projects = mongoose.model('Projects', projectSchema)
+const Mentors = mongoose.model('Mentors', mentorSchema)
+const Proxies = mongoose.model("Proxies", proxySchema)
+const Currencies = mongoose.model("Currency", currencySchema)
+
+export  { Users, Projects, Mentors, Proxies, Currencies};
