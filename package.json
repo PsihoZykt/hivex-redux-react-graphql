@@ -12,7 +12,7 @@
     "mongoose": "^6.4.0"
   },
   "scripts": {
-    "start": "yarn run client:install && npm run build --prefix client && cross-env NODE_ENV=production node src/index.js",
+    "start": "npm run build --prefix client && cross-env NODE_ENV=production node src/index.js",
     "server": "nodemon src/index.js",
     "client": "npm run start --prefix client",
     "client:install": "npm install --prefix client",
