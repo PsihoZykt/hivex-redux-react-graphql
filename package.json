@@ -13,7 +13,7 @@
     "cross-env": "^7.0.3"
   },
   "scripts": {
-    "start": "npm run client:build && cross-env NODE_ENV=production node src/index.js",
+    "start": "cross-env NODE_ENV=production node src/index.js",
     "server": "nodemon src/index.js",
     "client": "npm run start --prefix client",
     "client:install": "npm install --prefix client",
