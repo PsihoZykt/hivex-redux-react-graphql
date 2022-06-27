@@ -1,0 +1,60 @@
+.history {
+    background: #F6F6F6;
+    padding: 10px 0 10px 15px;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    overflow: scroll;
+    box-sizing: border-box;
+    width: 100vw;
+    height: 50px;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+
+}
+
+.history__clear {
+    position: relative;
+    width: 50px;
+    border: 1px solid #C4C4C4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #F6F6F6;
+    cursor: pointer;
+}
+
+.scrolling::before {
+    content: '';
+    height: 100%;
+    width: 40px;
+    display: block;
+    position: absolute;
+    pointer-events: none;
+    box-sizing: border-box;
+    top: 0;
+    left: -41px;
+    background: rgba(255, 255, 255, 1);
+    background: -moz-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(255, 255, 255, 1)), color-stop(100%, rgba(255, 255, 255, 0)));
+    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    background: -o-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    background: -ms-linear-gradient(left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff', GradientType=1);
+}
+
+
+.history-wrapper {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.history::-webkit-scrollbar {
+    display: none;
+}

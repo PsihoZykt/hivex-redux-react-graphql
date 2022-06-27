@@ -1,0 +1,7 @@
+.console-page {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 50px 50px calc(100vh - 170px) 70px;
+    grid-template-columns: 100%;
+
+}

@@ -1,0 +1,31 @@
+
+.history__item {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 6px 10px;
+  background-color: white;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  position: relative;
+  cursor: pointer;
+}
+
+@mixin history__item_status($color) {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: $color;
+}
+
+$unsuccessful_color: #CF2C00;
+$successful_color: #30B800;
+.history__item {
+  .status_unsuccessful {
+    @include history__item_status($successful_color)
+  }
+
+  .status_successful {
+    @include history__item_status($unsuccessful_color)
+  }
+}

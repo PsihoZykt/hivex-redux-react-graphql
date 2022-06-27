@@ -1,0 +1,12 @@
+
+.console {
+    display: flex;
+    flex-flow: row nowrap;
+    /*justify-content: space-between;*/
+    background-color: white;
+    /*padding: 10px 15px 15px 15px;*/
+    box-sizing: border-box;
+
+}
+
+

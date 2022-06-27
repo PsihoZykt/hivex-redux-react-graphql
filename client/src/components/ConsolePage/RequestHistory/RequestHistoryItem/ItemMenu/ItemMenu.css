@@ -1,0 +1,84 @@
+.expand__icon {
+    padding: 5px;
+    cursor: context-menu;
+    /*border: 1px solid red;*/
+}
+
+.expand-expanded {
+    position: fixed;
+    /*width: 100px;*/
+    display: flex;
+    flex-flow: column nowrap;
+    left: 0;
+    background-color: white;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+    z-index: 1000;
+}
+
+.copy:hover, .run:hover {
+    background-color: #0055FB;
+    cursor: pointer;
+    color: white;
+}
+
+.delete:hover {
+    background-color: #CF2C00;
+    cursor: pointer;
+    color: white;
+}
+
+.expand__item {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px 15px;
+}
+
+.expand-hidden {
+    display: none;
+}
+
+
+.delimiter {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    border-radius: 5px;
+
+}
+
+.copyEvent {
+    visibility: hidden;
+    position: absolute;
+    left: 0;
+    top: -10px;
+    background: #F6F6F6;
+    border-radius: 5px;
+
+}
+
+.copyEvent.fade {
+    animation-name: wobble;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 0.5s;
+    visibility: visible;
+}
+
+@keyframes wobble {
+    25% {
+        transform: translateY(-25%);
+    }
+    50% {
+        color: green;
+        transform: translateY(-50%);
+    }
+    75% {
+        color: red;
+        transform: translateY(-75%);
+    }
+    100% {
+        color: green;
+        transform: translateY(-100%);
+
+    }
+}

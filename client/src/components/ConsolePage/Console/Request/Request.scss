@@ -1,0 +1,81 @@
+$request-padding: 15px 0 15px 15px;
+$resizer-top: 100px;
+$resizer-width: 20px;
+$resizer-cursor: col-resize;
+
+$textarea-wrapper-gap: 10px;
+$textarea-wrapper-min-width: 400px;
+$textarea-wrapper-max-width: calc(100vw-400px);
+
+$request__textarea-width: 100%;
+$request__textarea-border: 1px solid rgba(0, 0, 0, 0.2);
+$request__textarea-font: "Fira Code", monospace;
+$request__textarea-font-size: 14px;
+$request__textarea-font-line-height: 18px;
+$request__textarea-border-radius: 5px;
+$request__textarea-padding: 10px;
+$request__textarea-margin: 5px;
+
+$request__textarea-error-border: 1px solid #CF2C00;
+$request__textarea-error-box-shadow: 0 0 5px rgba(207, 44, 0, 0.5);
+$request__textarea-error-border-radius: 5px;
+
+$request__header-error-color: #CF2C00;
+
+.request {
+  padding: $request-padding;
+  display: flex;
+  justify-content: center;
+  flex-flow: column nowrap;
+}
+
+
+.resizer {
+  top: $resizer-top;
+  width: $resizer-width;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: $resizer-cursor;
+}
+
+.textarea-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: $textarea-wrapper-gap;
+  height: 100%;
+  flex-basis: 100%;
+  max-width: $textarea-wrapper-max-width;
+  min-width: $textarea-wrapper-min-width;
+  overflow: auto;
+
+}
+
+.request__textarea {
+  width: $request__textarea-width;
+  resize: none;
+  border: $request__textarea-border;
+  font-family: $request__textarea-font;
+  font-size: $request__textarea-font-size;
+  line-height: $request__textarea-font-line-height;
+  box-sizing: border-box;
+  border-radius: $request__textarea-border-radius;
+  height: 99%;
+  padding: $request-padding;
+  margin: $request__textarea-margin;
+
+}
+
+.request__textarea.error {
+
+  border: $request__textarea-error-border;
+  box-sizing: border-box;
+  box-shadow: $request__textarea-error-box-shadow;
+  border-radius: $request__textarea-error-border-radius;
+
+}
+
+.request__header.error {
+  color: $request__header-error-color
+}

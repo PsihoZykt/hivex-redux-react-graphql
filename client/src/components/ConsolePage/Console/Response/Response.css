@@ -1,0 +1,41 @@
+.response__field.error {
+    border: 1px solid #CF2C00;
+    box-sizing: border-box;
+    box-shadow: 0 0 5px rgba(207, 44, 0, 0.5);
+
+    border-radius: 5px;
+
+}
+
+.response__header.error {
+    color: #CF2C00;
+}
+
+.response {
+    margin: 0;
+    overflow-x: hidden;
+    width: 100%;
+    min-width: 200px;
+    display: flex;
+    flex-flow: column nowrap;
+
+    padding: 15px 15px 15px 10px;
+}
+
+
+.response__field {
+    margin: 0;
+    resize: none;
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: "Fira Code", monospace;
+    font-size: 14px;
+    line-height: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    /*flex-basis: 100%;*/
+    height: 99%;
+    overflow: auto;
+
+
+}
