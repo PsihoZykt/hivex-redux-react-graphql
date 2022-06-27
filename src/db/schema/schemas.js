@@ -76,7 +76,7 @@ export const proxySchema = new mongoose.Schema({
         type: String
     },
     currencies: {
-        type: mongoose.Schema.Types.ObjectId, ref: "currency"
+        type: mongoose.Schema.Types.ObjectId, ref: "Currency"
     }
 })
 export const currencySchema = new mongoose.Schema({
@@ -85,6 +85,17 @@ export const currencySchema = new mongoose.Schema({
     },
     code: {
         type: String
+    }
+})
+export const requestSchema = new mongoose.Schema({
+    request: {
+        type: String
+    },
+    response: {
+        type: String
+    },
+    createdAt: {
+        type: Date
     }
 })
 export const mentorSchema = new mongoose.Schema({
