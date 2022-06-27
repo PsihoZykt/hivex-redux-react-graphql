@@ -1,8 +1,6 @@
-// import {config} from "dotenv";
+export const PORT = process.env['PORT'] || 8080;
 
-export const PORT = process.env.PORT || 8080;
-console.log(PORT)
-// config();
+// TODO: Hide dbString
 export const environment = {
     development: {
         serverURL: `http://localhost:${PORT}/`,
