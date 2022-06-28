@@ -4,45 +4,65 @@ import {Currencies, Mentors, Projects, Proxies, Requests, Users} from "../db/dbC
  * GraphQL Resolvers
  **/
 
-// Get all values from Entity from mongo  ( Entity is one of the models from dbConnector.js )
-const mongoDBGetAllResolver = (Entity) => {
-  return new Promise((resolve, reject) => {
-    Entity.find().then((entity) => {
-      resolve(entity)
-    }).catch((e) => reject(e))
-  })
-}
-// Add item to Entity collection
-const mongoDBAddEntityResolver = (Entity, _root, item) => {
-  const {...rest} = item;
-  const newItem = new Entity({...rest});
 
+// Add item to Entity collection
+const mongoDBAddEntityResolver = (Entity, _root, input) => {
+  const newItem = new Entity({...input});
   return new Promise((resolve, reject) => {
     newItem.save((err, item) => {
-      if (err) reject(err);
-      else resolve(item);
+      if (err) {
+        reject(err);
+      } else resolve(item);
     });
   });
 }
 export const resolvers = {
   Query: {
-    getUsers: async () => {
-      return await mongoDBGetAllResolver(Users)
+    getUsers: () => {
+      return new Promise((resolve, reject) => {
+        Users.find().populate({
+          path: 'project',
+          populate: {path: 'mentor'}
+        }).populate({path: "proxy", populate: {path: "currency"}}).then((entity) => {
+          console.log(entity)
+          resolve(entity)
+        }).catch((e) => console.log(e))
+      })
     },
     getProjects: async () => {
-      return await mongoDBGetAllResolver(Projects)
+      return new Promise((resolve, reject) => {
+        Projects.find().populate("mentor").then((entity) => {
+          resolve(entity)
+        }).catch((e) => reject(e))
+      })
     },
     getMentors: async () => {
-      return await mongoDBGetAllResolver(Mentors)
+      return new Promise((resolve, reject) => {
+        Mentors.find().then((entity) => {
+          resolve(entity)
+        }).catch((e) => reject(e))
+      })
     },
     getCurrencies: async () => {
-      return await mongoDBGetAllResolver(Currencies)
+      return new Promise((resolve, reject) => {
+        Currencies.find().then((entity) => {
+          resolve(entity)
+        }).catch((e) => reject(e))
+      })
     },
     getProxies: async () => {
-      return await mongoDBGetAllResolver(Proxies)
+      return new Promise((resolve, reject) => {
+        Proxies.find().populate("currency").then((entity) => {
+          resolve(entity)
+        }).catch((e) => reject(e))
+      })
     },
     getRequests: async () => {
-      return await mongoDBGetAllResolver(Requests)
+      return new Promise((resolve, reject) => {
+        Requests.find().then((entity) => {
+          resolve(entity)
+        }).catch((e) => reject(e))
+      })
     }
   },
   Mutation: {
@@ -60,7 +80,7 @@ export const resolvers = {
       return await mongoDBAddEntityResolver(Currencies, root, input)
 
     },
-    addUser: async (root, input) => {
+    addUser: async (root, {input}) => {
       return await mongoDBAddEntityResolver(Users, root, input)
     },
     addRequest: async (root, {input}) => {

@@ -5,6 +5,7 @@ export const typeDefs = gql`
 
     scalar Date
     type Project {
+        _id: ID,
         name: String,
         status: ProjectStatus,
         mentor: Mentor,
@@ -14,16 +15,19 @@ export const typeDefs = gql`
         techStack: String
     }
     type Request {
+        _id: ID,
         request: String,
         response: String,
         createdAt: Date
     }
     input RequestInput {
+        _id: ID,
         request: String,
         response: String,
         createdAt: Date,
     }
     input ProjectInput {
+        _id: ID,
         name: String,
         status: ProjectStatus,
         mentor: MentorInput,
@@ -34,6 +38,7 @@ export const typeDefs = gql`
     }
 
     type Mentor {
+        _id: ID,
         name: String,
         level: Level,
         workDuration: Int,
@@ -43,6 +48,7 @@ export const typeDefs = gql`
         techStack: String
     }
     input MentorInput {
+        _id: ID,
         name: String,
         level: Level,
         workDuration: Int,
@@ -52,6 +58,7 @@ export const typeDefs = gql`
         techStack: String
     }
     type Proxy {
+        _id: ID,
         name: String,
         country: String,
         timestamp: Int,
@@ -59,6 +66,7 @@ export const typeDefs = gql`
         currency: Currency
     }
     input ProxyInput {
+        _id: ID,
         name: String,
         country: String,
         timestamp: Int,
@@ -66,13 +74,9 @@ export const typeDefs = gql`
         currency: CurrencyInput
     }
     type Currency {
-        id: ID,
+        _id: ID,
         name: String,
         code: String
-    }
-    type Contact {
-        firstName: String
-        lastName: String
     }
     enum ProjectStatus {
         open
@@ -92,11 +96,13 @@ export const typeDefs = gql`
 
 
     input CurrencyInput {
+        _id: ID,
         name: String,
         code: String,
     }
 
     input UserInput {
+        _id: ID,
         name: String,
         proxy: ProxyInput,
         salary: Int,
@@ -107,7 +113,7 @@ export const typeDefs = gql`
         techStack: String
     }
     type User {
-        id: ID,
+        _id: ID,
         name: String,
         proxy: Proxy,
         salary: Int,
