@@ -1,48 +1,87 @@
 import GithubLink from 'common/GithubLink/GithubLink'
 import format from 'assets/img/consolePage/format.svg'
-import React, {Dispatch, useEffect} from 'react'
+import React, {Dispatch, useState} from 'react'
 import './Footer.css'
-import {gql, useMutation, useQuery} from "@apollo/client";
+import _ from "lodash";
+import {useLazyQuery, useQuery} from "@apollo/client";
+import {createGetUsersQuery, getUsersQuery} from "components/ConsolePage/Footer/getUsers";
+import {getCurrenciesQuery} from "components/ConsolePage/Footer/getCurrencies";
+import {getProxiesQuery} from "components/ConsolePage/Footer/getProxies";
+import {getRequestsQuery} from "components/ConsolePage/Footer/getRequests";
+import {getProjectsQuery} from "components/ConsolePage/Footer/getProjects";
+import {getMentorsQuery} from "components/ConsolePage/Footer/getMentors";
 import {getFormattedJSON} from "helpers/json/format";
 
 type FooterProps = {
   request: String
   setResponse: Dispatch<string>
 }
+
+
 const Footer = ({request, setResponse}: FooterProps) => {
+  const [requestBody, setRequestBody] = useState<String>("name")
+  const [testUsersData, userData] = useLazyQuery(createGetUsersQuery(requestBody), {
+    errorPolicy: "ignore", onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const usersData = useQuery(getUsersQuery)
+  const currenciesData = useQuery(getCurrenciesQuery)
+  const mentorsData = useQuery(getMentorsQuery)
+  const proxiesData = useQuery(getProxiesQuery)
+  const requestsData = useQuery(getRequestsQuery)
+  const projectsData = useQuery(getProjectsQuery)
 
-    const getUsers = gql`query GetRequests {
-        getUsers {
-            name
-            proxy {
-                bank
-            }
-            salary
-            project {
-                name
-            }
-        }
-    }`
-    const saveRequestToHistory = gql`mutation AddRequest($input: RequestInput) {
-        addRequest(input: $input) {
-            createdAt, request, response
-        }
-    }`
-
-
-  const [func, res] = useMutation(saveRequestToHistory)
-  const {loading, error, data} = useQuery(getUsers)
   const onSubmitRequest = async () => {
-    if (request === "get-users") {
-      await func({variables: {input: {request: request, response: JSON.stringify(data), createdAt: new Date()}}});
-      setResponse(getFormattedJSON(JSON.stringify(data)))
+    // setRequestBody(request)
+    let response = ""
+    const requestParts = request.split(' ')
+    if (requestParts[1] === "get-fields" && requestParts[2] === "-values") {
+      let requestValues = request.split("-values")[1].split("|")
+      requestValues.forEach((value, idx) => {
+        requestValues[idx] = value.trim()
+      })
+      let fields = requestValues.join(" ")
+
+      if (fields.includes("projects")) {
+        response += getFormattedJSON(JSON.stringify(projectsData.data)) + "\n"
+      }
+      if (fields.includes("users")) {
+        response += getFormattedJSON(JSON.stringify(usersData.data))
+      }
+      if (fields.includes("currencies")) {
+        response += getFormattedJSON(JSON.stringify(currenciesData.data))
+      }
+      if (fields.includes("proxies")) {
+        response += getFormattedJSON(JSON.stringify(proxiesData.data))
+      }
+      if (fields.includes("requests")) {
+        response += getFormattedJSON(JSON.stringify(requestsData.data))
+      }
+      if (fields.includes("mentors")) {
+        response += getFormattedJSON(JSON.stringify(mentorsData.data))
+      }
+
+      setResponse(response)
+
+    } else
+    if (requestParts[1] === "get-users" && requestParts[2] === "-values") {
+      let requestValues = request.split("-values")
+      requestValues = requestValues[1].trim().split(" ")
+      requestValues.forEach((value, idx) => {
+        requestValues[idx] = value.trim()
+      })
+
+      let newObj = {}
+      requestValues.forEach(item => _.set(newObj, item, null))
+      let newObjJSON = ""
+      newObjJSON = JSON.stringify(newObj).replace(/"/g, "").replace(/:null/g, "").replace(/:/g, "").replace(/^.|.$/g, "").replace(/,/g, " ")
+      setRequestBody(newObjJSON)
+      await testUsersData()
 
     }
 
   }
-  useEffect(() => {
-
-  })
 
   return (
     <div className="footer">
@@ -62,6 +101,7 @@ const Footer = ({request, setResponse}: FooterProps) => {
         <img src={format} alt="some rectangles with different width"/>
         Форматировать
       </div>
+
     </div>
   )
 }
