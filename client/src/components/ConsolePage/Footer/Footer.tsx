@@ -33,6 +33,7 @@ const Footer = ({request, setResponse}: FooterProps) => {
   const projectsData = useQuery(getProjectsQuery)
 
   const onSubmitRequest = async () => {
+    console.log("TEST")
     // setRequestBody(request)
     let response = ""
     const requestParts = request.split(' ')
