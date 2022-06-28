@@ -75,8 +75,8 @@ export const proxySchema = new mongoose.Schema({
     bank: {
         type: String
     },
-    currencies: {
-        type: mongoose.Schema.Types.ObjectId, ref: "Currency"
+    currency: {
+        type: mongoose.Schema.Types.ObjectId, ref: "Currencies"
     }
 })
 export const currencySchema = new mongoose.Schema({

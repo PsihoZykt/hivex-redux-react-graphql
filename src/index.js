@@ -17,8 +17,8 @@ const __dirname = path.dirname(__filename);
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    csrfPrevention: true,
-    cache: 'bounded',
+    // csrfPrevention: true,
+    // cache: 'bounded',
 });
 
 /**

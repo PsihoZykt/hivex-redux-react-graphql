@@ -21,7 +21,7 @@ const Users = mongoose.model('Users', userSchema)
 const Projects = mongoose.model('Projects', projectSchema)
 const Mentors = mongoose.model('Mentors', mentorSchema)
 const Proxies = mongoose.model("Proxies", proxySchema)
-const Currencies = mongoose.model("Currency", currencySchema)
-const Requests = mongoose.model("Request", requestSchema)
+const Currencies = mongoose.model("Currencies", currencySchema)
+const Requests = mongoose.model("Requests", requestSchema)
 
 export {Users, Projects, Mentors, Proxies, Currencies, Requests};
