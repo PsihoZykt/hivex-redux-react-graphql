@@ -19,7 +19,7 @@
     "client": "npm run start --prefix client",
     "client:install": "npm install --prefix client",
     "client:build": "npm run build --prefix client",
-    "heroku-postbuild": "yarn install && cd client && yarn install && yarn run build",
+    "heroku-postbuild": "yarn install --force  && cd client && yarn install --force && yarn run build",
     "dev": "cross-env NODE_ENV=development concurrently \"npm run server\" \"npm run client\"",
     "generate": "graphql-codegen --config codegen.yml"
   },
