@@ -2,7 +2,6 @@ import GithubLink from 'common/GithubLink/GithubLink'
 import format from 'assets/img/consolePage/format.svg'
 import React, {Dispatch, useState} from 'react'
 import './Footer.css'
-import _ from "lodash";
 import {useLazyQuery, useQuery} from "@apollo/client";
 import {createGetUsersQuery, getUsersQuery} from "components/ConsolePage/Footer/getUsers";
 import {getCurrenciesQuery} from "components/ConsolePage/Footer/getCurrencies";
@@ -11,6 +10,7 @@ import {getRequestsQuery} from "components/ConsolePage/Footer/getRequests";
 import {getProjectsQuery} from "components/ConsolePage/Footer/getProjects";
 import {getMentorsQuery} from "components/ConsolePage/Footer/getMentors";
 import {getFormattedJSON} from "helpers/json/format";
+import {getFields, getUsersQueryFields} from "helpers/graphql/graphqlHelper";
 
 type FooterProps = {
   request: String
@@ -34,16 +34,10 @@ const Footer = ({request, setResponse}: FooterProps) => {
 
   const onSubmitRequest = async () => {
     console.log("TEST")
-    // setRequestBody(request)
     let response = ""
     const requestParts = request.split(' ')
     if (requestParts[1] === "get-fields" && requestParts[2] === "-values") {
-      let requestValues = request.split("-values")[1].split("|")
-      requestValues.forEach((value, idx) => {
-        requestValues[idx] = value.trim()
-      })
-      let fields = requestValues.join(" ")
-
+      const fields = getFields(request)
       if (fields.includes("projects")) {
         response += getFormattedJSON(JSON.stringify(projectsData.data)) + "\n"
       }
@@ -67,17 +61,8 @@ const Footer = ({request, setResponse}: FooterProps) => {
 
     } else
     if (requestParts[1] === "get-users" && requestParts[2] === "-values") {
-      let requestValues = request.split("-values")
-      requestValues = requestValues[1].trim().split(" ")
-      requestValues.forEach((value, idx) => {
-        requestValues[idx] = value.trim()
-      })
-
-      let newObj = {}
-      requestValues.forEach(item => _.set(newObj, item, null))
-      let newObjJSON = ""
-      newObjJSON = JSON.stringify(newObj).replace(/"/g, "").replace(/:null/g, "").replace(/:/g, "").replace(/^.|.$/g, "").replace(/,/g, " ")
-      setRequestBody(newObjJSON)
+      const usersQueryString = getUsersQueryFields(request)
+      setRequestBody(usersQueryString)
       await testUsersData()
 
     }
