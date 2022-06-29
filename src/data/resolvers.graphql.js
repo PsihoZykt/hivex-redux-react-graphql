@@ -18,15 +18,85 @@ const mongoDBAddEntityResolver = (Entity, _root, input) => {
 }
 export const resolvers = {
   Query: {
-    getUsers: () => {
-      return new Promise((resolve, reject) => {
-        Users.find().populate({
-          path: 'project',
-          populate: {path: 'mentor'}
-        }).populate({path: "proxy", populate: {path: "currency"}}).then((entity) => {
-          console.log(entity)
-          resolve(entity)
-        }).catch((e) => console.log(e))
+    getUsers: (parent, args, context, info) => {
+      const {filter} = args;
+      const shouldApplyFilters = filter !== null;
+
+
+      return new Promise(async (resolve, reject) => {
+        console.log(filter.name)
+        console.log(filter.project.mentor.name)
+        let query = {};
+        // query.name = {}
+        // query.project = {}
+        // if (filter?.name) { query = {name: filter?.name}}
+        if (filter) {
+          if (filter.name) {
+            query.name = {}
+            query.name = {
+              "name": {$eq: filter.name}
+            }
+          }
+          if (filter.project) {
+            query.project = {}
+
+            if (filter.project?.mentor) {
+              query.project.mentor = {}
+              query.project.mentor.name = {
+                "project.mentor.name": {$eq: filter.project.mentor.name}
+              }
+            }
+
+            if (filter.project.name) {
+              query.project.name = {
+                "project.name": {$eq: filter.project.name}
+              }
+            }
+          }
+          console.log("Da", query.project.mentor)
+          query = {
+            "$and": [
+              query.project?.name || {},
+              query.project?.mentor?.name || {},
+              // {"project.mentor.name" : {$eq : "das"}},
+              query.name || {}
+            ]
+          }
+
+        }
+
+        const match = {
+          $match: query
+        }
+        console.log(match)
+
+        const res = Users.aggregate(
+            [
+              {
+                $lookup:
+                    {
+                      from: "projects",
+                      localField: "project",
+                      pipeline: [{
+                        $lookup: {
+                          from: "mentors",
+                          localField: "mentor",
+                          foreignField: "_id",
+                          as: "mentor"
+                        }
+                      }, {$unwind: "$mentor"}],
+                      foreignField: "_id",
+                      as: "project"
+                    }
+              },
+              {$unwind: "$project"},
+              match,
+
+
+            ]).then(res => {
+          resolve(res)
+        })
+
       })
     },
     getProjects: async () => {

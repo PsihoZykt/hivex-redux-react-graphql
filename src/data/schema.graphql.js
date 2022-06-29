@@ -100,7 +100,17 @@ export const typeDefs = gql`
         name: String,
         code: String,
     }
-
+    input MentorFilter {
+        name: String
+    }
+    input ProjectFilter {
+        name: String
+        mentor: MentorFilter
+    }
+    input UserFilter {
+        name: String
+        project: ProjectFilter
+    }
     input UserInput {
         _id: ID,
         name: String,
@@ -111,6 +121,7 @@ export const typeDefs = gql`
         level: Level,
         timestamp: Int,
         techStack: String
+        filter: UserFilter
     }
     type User {
         _id: ID,
@@ -131,7 +142,7 @@ export const typeDefs = gql`
         getMentors: [Mentor]
         getProxies: [Proxy]
         getCurrencies: [Currency]
-        getUsers: [User]
+        getUsers(filter: UserFilter): [User]
         getRequests: [Request]
     }
 
