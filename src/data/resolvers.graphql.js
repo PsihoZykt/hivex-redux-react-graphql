@@ -16,6 +16,22 @@ const mongoDBAddEntityResolver = (Entity, _root, input) => {
     });
   });
 }
+const mongoDBDeleteUserResolver = async (Entity, _root, input) => {
+  console.log(input)
+  const users = await Entity.find(input);
+  await Entity.deleteMany(input);
+
+  return users;
+}
+const mongoDBUpdateUsersResolver = async (Entity, _root, input) => {
+// > db.users.updateMany({name : "Tom"}, {$set: {salary : 560}})
+  const {filter, set} = input
+  console.log(filter)
+ const test = await Entity.updateMany(filter, {$set: set})
+  const updatedUsers = await Entity.find(filter)
+  console.log("TEST", test)
+  return updatedUsers
+}
 export const resolvers = {
   Query: {
     getUsers: (parent, args, context, info) => {
@@ -81,12 +97,22 @@ export const resolvers = {
                           foreignField: "_id",
                           as: "mentor"
                         }
-                      }, {$unwind: "$mentor"}],
+                      }, {
+                        $unwind: {
+                          path: "$mentor",
+                          "preserveNullAndEmptyArrays": true
+                        }
+                      }],
                       foreignField: "_id",
                       as: "project"
                     }
               },
-              {$unwind: "$project"},
+              {
+                $unwind: {
+                  path: "$project",
+                  "preserveNullAndEmptyArrays": true
+                }
+              },
               match,
 
 
@@ -154,6 +180,12 @@ export const resolvers = {
 
       input.createdAt = new Date();
       return await mongoDBAddEntityResolver(Requests, root, input)
+    },
+    deleteUser: async (root, {input}) => {
+      return await mongoDBDeleteUserResolver(Users, root, input)
+    },
+    updateUsers: async (root, {input}) => {
+      return await mongoDBUpdateUsersResolver(Users, root, input)
     }
 
   },

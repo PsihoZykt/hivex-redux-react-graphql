@@ -108,8 +108,15 @@ export const typeDefs = gql`
         mentor: MentorFilter
     }
     input UserFilter {
+        _id: ID,
         name: String
         project: ProjectFilter
+    }
+    input UpdateUsersInput {
+        
+        filter: UserFilter!
+        set: UserFilter
+    
     }
     input UserInput {
         _id: ID,
@@ -135,7 +142,7 @@ export const typeDefs = gql`
         timeStamp: Int,
     }
 
-
+  
     type Query {
 
         getProjects: [Project]
@@ -148,7 +155,8 @@ export const typeDefs = gql`
 
 
     type Mutation {
-
+        deleteUser(input: UserFilter): [User]
+        updateUsers(input: UpdateUsersInput): [User]
         addCurrency(input: CurrencyInput): Currency
         addUser(input: UserInput): User
         addProject(input: ProjectInput): Project
