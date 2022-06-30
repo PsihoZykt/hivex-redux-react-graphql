@@ -4,6 +4,7 @@ import React, {Dispatch, useState} from 'react'
 import './Footer.css'
 import {useLazyQuery, useQuery} from "@apollo/client";
 import {createGetUsersQuery, getUsersQuery} from "components/ConsolePage/Footer/getUsers";
+import {getQuery} from "helpers/graphql/graphqlHelper";
 
 type FooterProps = {
   request: String
@@ -62,42 +63,8 @@ const Footer = ({request, setResponse}: FooterProps) => {
     //   await testUsersData()
     // }
     if (requestParts[1] === "get-users" && requestParts[2] === "-values" && request.includes("-f")) {
-      const afterValues = request.split('-values')[1]
-      let fieldsWithFilters = afterValues.split("|").map(e => e.trim())
-      let answer: any = []
-      fieldsWithFilters.forEach(e => {
-        if (e.includes("-f")) {
-          answer.push({field: e.split(" ")[0], value: e.split("-f")[1]})
-        } else {
-          answer.push({field: e, value: null})
-        }
-      })
-      let bracketPosition: any = []
-
-      answer.forEach((e: any, idx: any) => {
-        while (answer[idx].field.includes('.')) {
-          answer[idx].field = answer[idx].field.replace(/\./, "{") + "}"
-        }
-
-        bracketPosition.push(answer[idx].field.indexOf("}"))
-        if (answer[idx].value) {
-          if (bracketPosition[idx] !== -1) {
-            answer[idx].value = answer[idx].field.substr(0, bracketPosition[idx]) + ":" +
-              answer[idx].value +
-              answer[idx].field.substr(bracketPosition[idx])
-            answer[idx].value = answer[idx].value.replace(/{/g,":{")
-
-            console.log(bracketPosition)
-          } else answer[idx].value = answer[idx].field + ":" + answer[idx].value
-        }
-      })
-      let query = {body: "" , queryString: ""}
-      answer.forEach((e:any) => {
-        query.body += e.field + " "
-        query.queryString += e.value? e.value : "" + ", "
-      })
-      query.queryString = "{" + query.queryString + "}"
-      setQueryObj({body: query.body, queryString: query.queryString})
+     const query = getQuery(request)
+      setQueryObj({body: query.fields, queryString: query.filter})
       await testUsersData()
     }
   }

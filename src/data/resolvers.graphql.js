@@ -24,8 +24,6 @@ export const resolvers = {
 
 
       return new Promise(async (resolve, reject) => {
-        console.log(filter.name)
-        console.log(filter.project.mentor.name)
         let query = {};
         // query.name = {}
         // query.project = {}
@@ -53,7 +51,6 @@ export const resolvers = {
               }
             }
           }
-          console.log("Da", query.project.mentor)
           query = {
             "$and": [
               query.project?.name || {},
