@@ -44,11 +44,10 @@ export const getUsersQuery =
             }
         }`
 
-export const createGetUsersQuery = ({body, queryString = {}}: any) => {
-    console.log(queryString)
+export const createGetUsersQuery = ({body}: any) => {
     try {
-        return gql`query GetUsers {
-            getUsers(filter: ${queryString}) {
+        return gql`query GetUsers($input: UserFilter) {
+            getUsers(filter: $input) {
                 ${body}
             }
         }`

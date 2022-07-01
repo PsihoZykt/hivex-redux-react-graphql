@@ -10,14 +10,19 @@ import {
   getUsersQuery,
   UPDATE_USERS
 } from "components/ConsolePage/Footer/getUsers";
-import {getAddUserMutation, getDeleteUserMutation, getFields, getQuery} from "helpers/graphql/graphqlHelper";
+import {
+  getAddUserMutation,
+  getDeleteUserMutation,
+  getQuery,
+  getUpdateUsersMutation,
+  getValues
+} from "helpers/graphql/graphqlHelper";
 import {getFormattedJSON} from "helpers/json/format";
 import {getCurrenciesQuery} from "components/ConsolePage/Footer/getCurrencies";
 import {getMentorsQuery} from "components/ConsolePage/Footer/getMentors";
 import {getProxiesQuery} from "components/ConsolePage/Footer/getProxies";
 import {getRequestsQuery} from "components/ConsolePage/Footer/getRequests";
 import {getProjectsQuery} from "components/ConsolePage/Footer/getProjects";
-import {getUpdateUsersMutation} from "helpers/graphql/getUpdateUserMutation";
 
 type FooterProps = {
   request: String
@@ -46,11 +51,10 @@ type CommandType = {
   prefix: "hivex"
   commandName: CommandNames
   valuesKey: "-values"
-  // body: String
 }
 const Footer = ({request, setResponse}: FooterProps) => {
 
-  const [queryObj, setQueryObj] = useState<{ body: String, queryString: any }>({body: "_id", queryString: {}})
+  const [queryObj, setQueryObj] = useState<{ body: String }>({body: "_id"})
   const [testUsersData, userData] = useLazyQuery(createGetUsersQuery(queryObj), {
     errorPolicy: "ignore", onCompleted: (data) => {
       setResponse(JSON.stringify(data, null, "\t"))
@@ -88,56 +92,57 @@ const Footer = ({request, setResponse}: FooterProps) => {
     let command: CommandType = {
       prefix, commandName, valuesKey,
     }
-    if (command.prefix === "hivex" && command.commandName === CommandNames.GET_FIELDS) {
-      const fields = getFields(request)
-      if (fields.includes(Fields.PROJECTS)) {
-        response += getFormattedJSON(JSON.stringify(projectsData.data)) + "\n"
-      }
-      if (fields.includes(Fields.USERS)) {
-        response += getFormattedJSON(JSON.stringify(usersData.data))
-      }
-      if (fields.includes(Fields.CURRENCIES)) {
-        response += getFormattedJSON(JSON.stringify(currenciesData.data))
-      }
-      if (fields.includes(Fields.PROXIES)) {
-        response += getFormattedJSON(JSON.stringify(proxiesData.data))
-      }
-      if (fields.includes(Fields.REQUESTS)) {
-        response += getFormattedJSON(JSON.stringify(requestsData.data))
-      }
-      if (fields.includes(Fields.MENTORS)) {
-        response += getFormattedJSON(JSON.stringify(mentorsData.data))
-      }
+    if (command.prefix === "hivex") {
+      if (command.commandName === CommandNames.GET_FIELDS) {
+        const fields = getValues(request)
+        if (fields.includes(Fields.PROJECTS)) {
+          response += getFormattedJSON(JSON.stringify(projectsData.data)) + "\n"
+        }
+        if (fields.includes(Fields.USERS)) {
+          response += getFormattedJSON(JSON.stringify(usersData.data))
+        }
+        if (fields.includes(Fields.CURRENCIES)) {
+          response += getFormattedJSON(JSON.stringify(currenciesData.data))
+        }
+        if (fields.includes(Fields.PROXIES)) {
+          response += getFormattedJSON(JSON.stringify(proxiesData.data))
+        }
+        if (fields.includes(Fields.REQUESTS)) {
+          response += getFormattedJSON(JSON.stringify(requestsData.data))
+        }
+        if (fields.includes(Fields.MENTORS)) {
+          response += getFormattedJSON(JSON.stringify(mentorsData.data))
+        }
+        setResponse(response)
+      } else {
+        if (command.commandName === CommandNames.GET_USERS && command.valuesKey === "-values") {
+          const query = getQuery(request)
+          setQueryObj({body: query.fields})
+          await testUsersData({variables: {input: query.filter}})
+        } else if (command.commandName === CommandNames.ADD_USER && command.valuesKey === "-values") {
+          const mutation = getAddUserMutation(request)
+          await addUser({variables: {input: mutation.filter}})
+        } else if (command.commandName === CommandNames.DELETE_USERS && command.valuesKey === "-values") {
+          const query = getDeleteUserMutation(request)
+          await deleteUsers({variables: {input: query.filter}})
+        } else if (command.commandName === CommandNames.UPDATE_USERS && command.valuesKey === "-values") {
 
-      setResponse(response)
-    } else if (command.commandName === CommandNames.GET_USERS && command.prefix === "hivex" && command.valuesKey === "-values") {
-      const query = getQuery(request)
-      setQueryObj({body: query.fields, queryString: query.filter})
-      await testUsersData()
-    } else if (command.commandName === CommandNames.ADD_USER && command.prefix === "hivex" && command.valuesKey === "-values") {
-      const mutation = getAddUserMutation(request)
-
-      await addUser({variables: {input: JSON.parse(mutation.value)}})
-    } else if (command.prefix === "hivex" && command.commandName === CommandNames.DELETE_USERS && command.valuesKey === "-values") {
-      const query = getDeleteUserMutation(request)
-      await deleteUsers({variables: {input: JSON.parse(query.filter)}})
-    } else if (command.prefix === "hivex" && command.commandName === CommandNames.UPDATE_USERS && command.valuesKey === "-values") {
-
-      let mutation = getUpdateUsersMutation(request)
-
-      await updateUsers({
-        variables:
-          {
-            input:
+          let mutation = getUpdateUsersMutation(request)
+          console.log(mutation.filter)
+          await updateUsers({
+            variables:
               {
-                filter:
-                  JSON.parse(mutation.filter),
-                set: JSON.parse(mutation.set)
+                input:
+                  {
+                    filter: mutation.filter,
+                    set: mutation.set
+                  }
               }
-          }
-      })
+          })
 
 
+        }
+      }
     } else {
       setResponse(`
       Incorrect command: 

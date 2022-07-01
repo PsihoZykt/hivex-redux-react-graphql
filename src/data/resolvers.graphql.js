@@ -1,4 +1,6 @@
 import {Currencies, Mentors, Projects, Proxies, Requests, Users} from "../db/dbConnector.js";
+import {getKeysArrFromObject} from "../helpers/FilterParsing.js";
+import _ from "lodash";
 
 /**
  * GraphQL Resolvers
@@ -17,71 +19,53 @@ const mongoDBAddEntityResolver = (Entity, _root, input) => {
   });
 }
 const mongoDBDeleteUserResolver = async (Entity, _root, input) => {
-  console.log(input)
-  const users = await Entity.find(input);
-  await Entity.deleteMany(input);
-
-  return users;
+  const isFilter = Object.keys(input).length !== 0;
+  if (isFilter) {
+    const users = await Entity.find(input);
+    await Entity.deleteMany(input);
+    return users;
+  }
 }
 const mongoDBUpdateUsersResolver = async (Entity, _root, input) => {
-// > db.users.updateMany({name : "Tom"}, {$set: {salary : 560}})
-  const {filter, set} = input
+  let {filter, set} = input
   console.log(filter)
- const test = await Entity.updateMany(filter, {$set: set})
-  const updatedUsers = await Entity.find(filter)
-  console.log("TEST", test)
-  return updatedUsers
+  console.log(set)
+
+  const isFilter = Object.keys(filter).length !== 0;
+  if (isFilter) {
+    await Entity.updateMany(filter, {$set: set})
+    const updatedUsers = await Entity.find({set})
+    return updatedUsers
+  }
+
 }
 export const resolvers = {
   Query: {
     getUsers: (parent, args, context, info) => {
       const {filter} = args;
-      const shouldApplyFilters = filter !== null;
 
+      const shouldApplyFilters = filter !== null;
 
       return new Promise(async (resolve, reject) => {
         let query = {};
-        // query.name = {}
-        // query.project = {}
-        // if (filter?.name) { query = {name: filter?.name}}
+        let filterFieldsArr = [{}]
+        let filterFields = {}
         if (filter) {
-          if (filter.name) {
-            query.name = {}
-            query.name = {
-              "name": {$eq: filter.name}
-            }
-          }
-          if (filter.project) {
-            query.project = {}
-
-            if (filter.project?.mentor) {
-              query.project.mentor = {}
-              query.project.mentor.name = {
-                "project.mentor.name": {$eq: filter.project.mentor.name}
-              }
-            }
-
-            if (filter.project.name) {
-              query.project.name = {
-                "project.name": {$eq: filter.project.name}
-              }
-            }
-          }
+          let keys = getKeysArrFromObject(filter)
+          keys.forEach(key => {
+            filterFieldsArr.push({[key]: {$eq: _.get(filter, key)}})
+          })
+          console.log(filterFieldsArr)
           query = {
             "$and": [
-              query.project?.name || {},
-              query.project?.mentor?.name || {},
-              // {"project.mentor.name" : {$eq : "das"}},
-              query.name || {}
+              ...filterFieldsArr
             ]
           }
-
         }
 
         const match = {
           $match: query
         }
-        console.log(match)
 
         const res = Users.aggregate(
             [
