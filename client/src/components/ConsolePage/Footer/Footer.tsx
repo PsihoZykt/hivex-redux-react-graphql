@@ -11,18 +11,46 @@ import {
   UPDATE_USERS
 } from "components/ConsolePage/Footer/getUsers";
 import {
+  getAddEntityMutation,
   getAddUserMutation,
-  getDeleteUserMutation,
+  getDeleteEntityMutation,
   getQuery,
-  getUpdateUsersMutation,
+  getUpdateEntityMutation,
   getValues
 } from "helpers/graphql/graphqlHelper";
 import {getFormattedJSON} from "helpers/json/format";
-import {getCurrenciesQuery} from "components/ConsolePage/Footer/getCurrencies";
-import {getMentorsQuery} from "components/ConsolePage/Footer/getMentors";
-import {getProxiesQuery} from "components/ConsolePage/Footer/getProxies";
-import {getRequestsQuery} from "components/ConsolePage/Footer/getRequests";
-import {getProjectsQuery} from "components/ConsolePage/Footer/getProjects";
+import {
+  ADD_CURRENCY, createGetCurrenciesQuery,
+  DELETE_CURRENCIES,
+  getCurrenciesQuery,
+  UPDATE_CURRENCIES
+} from "components/ConsolePage/Footer/getCurrencies";
+import {
+  ADD_MENTOR,
+  createGetMentorsQuery,
+  DELETE_MENTORS,
+  getMentorsQuery,
+  UPDATE_MENTORS
+} from "components/ConsolePage/Footer/getMentors";
+import {
+  ADD_PROXY,
+  createGetProxiesQuery,
+  DELETE_PROXIES,
+  getProxiesQuery,
+  UPDATE_PROXIES
+} from "components/ConsolePage/Footer/getProxies";
+import {
+  ADD_REQUEST, createGetRequestsQuery,
+  DELETE_REQUESTS,
+  getRequestsQuery,
+  UPDATE_REQUESTS
+} from "components/ConsolePage/Footer/getRequests";
+import {
+  ADD_PROJECT, createGetProjectsQuery,
+  DELETE_PROJECTS,
+  getProjectsQuery,
+  UPDATE_PROJECTS
+} from "components/ConsolePage/Footer/getProjects";
 
 type FooterProps = {
   request: String
@@ -30,11 +58,37 @@ type FooterProps = {
 }
 
 enum CommandNames {
-  GET_USERS = "get-users",
   GET_FIELDS = "get-fields",
+  GET_USERS = "get-users",
   ADD_USER = "add-user",
   DELETE_USERS = "delete-users",
   UPDATE_USERS = "update-users",
+
+  GET_CURRENCIES = "get-currencies",
+  ADD_CURRENCY = "add-currency",
+  DELETE_CURRENCIES = "delete-currencies",
+  UPDATE_CURRENCIES = "update-currencies",
+
+  GET_MENTORS = "get-mentors",
+  ADD_MENTOR = "add-mentors",
+  DELETE_MENTORS = "delete-mentors",
+  UPDATE_MENTORS = "update-mentors",
+
+  GET_PROJECTS = "get-projects",
+  ADD_PROJECT = "add-project",
+  DELETE_PROJECTS = "delete-projects",
+  UPDATE_PROJECTS = "update-projects",
+
+  GET_PROXIES = "get-proxies",
+  ADD_PROXY = "add-proxy",
+  DELETE_PROXIES = "delete-proxies",
+  UPDATE_PROXIES = "update-proxies",
+
+  GET_REQUESTS = "get-requests",
+  ADD_REQUEST = "add-request",
+  DELETE_REQUESTS = "delete-requests",
+  UPDATE_REQUESTS = "update-requests",
+
 }
 
 enum Fields {
@@ -60,6 +114,33 @@ const Footer = ({request, setResponse}: FooterProps) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
   })
+  const [getCurrencies, getCurrenciesData] = useLazyQuery(createGetCurrenciesQuery(queryObj), {
+    errorPolicy: "ignore", onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+
+  const [getMentors, getMentorsData] = useLazyQuery(createGetMentorsQuery(queryObj), {
+    errorPolicy: "ignore", onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [getProjects, getProjectsData] = useLazyQuery(createGetProjectsQuery(queryObj), {
+    errorPolicy: "ignore", onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [getProxies, getProxiesData] = useLazyQuery(createGetProxiesQuery(queryObj), {
+    errorPolicy: "ignore", onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [getRequests, getRequestsData] = useLazyQuery(createGetRequestsQuery(queryObj), {
+    errorPolicy: "ignore", onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+
 
   const usersData = useQuery(getUsersQuery)
   const currenciesData = useQuery(getCurrenciesQuery)
@@ -72,16 +153,98 @@ const Footer = ({request, setResponse}: FooterProps) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
   })
+  const [addCurrency, addCurrencyData] = useMutation(ADD_CURRENCY, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+
+  const [addMentor, addMentorData] = useMutation(ADD_MENTOR, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+
+  const [addProject, addProjectData] = useMutation(ADD_PROJECT, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [addProxy, addProxyData] = useMutation(ADD_PROXY, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+
+
+  const [addRequest, addRequestData] = useMutation(ADD_REQUEST, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
   const [deleteUsers, deleteUsersData] = useMutation(DELETE_USERS, {
     onCompleted: (data) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
   })
+  const [deleteCurrencies, deleteCurrenciesData] = useMutation(DELETE_CURRENCIES, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [deleteMentors, deleteMentorsData] = useMutation(DELETE_MENTORS, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [deleteProjects, deleteProjectsData] = useMutation(DELETE_PROJECTS, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [deleteProxies, deleteProxiesData] = useMutation(DELETE_PROXIES, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [deleteRequests, deleteRequestData] = useMutation(DELETE_REQUESTS, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+
+
   const [updateUsers, updateUsersData] = useMutation(UPDATE_USERS, {
     onCompleted: (data) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
   })
+  const [updateCurrencies, updateCurrenciesData] = useMutation(UPDATE_CURRENCIES, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [updateMentors, updateMentorsData] = useMutation(UPDATE_MENTORS, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [updateProjects, updateProjectsData] = useMutation(UPDATE_PROJECTS, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [updateProxies, updateUProxiesData] = useMutation(UPDATE_PROXIES, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [updateRequests, updateRequestsData] = useMutation(UPDATE_REQUESTS, {
+    onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+
 
   const onSubmitRequest = async () => {
     let response = ""
@@ -114,33 +277,116 @@ const Footer = ({request, setResponse}: FooterProps) => {
           response += getFormattedJSON(JSON.stringify(mentorsData.data))
         }
         setResponse(response)
-      } else {
-        if (command.commandName === CommandNames.GET_USERS && command.valuesKey === "-values") {
+      }
+      else if (command.valuesKey === "-values") {
+        if (command.commandName === CommandNames.GET_USERS) {
           const query = getQuery(request)
+          console.log(query.filter)
           setQueryObj({body: query.fields})
           await testUsersData({variables: {input: query.filter}})
-        } else if (command.commandName === CommandNames.ADD_USER && command.valuesKey === "-values") {
-          const mutation = getAddUserMutation(request)
+        }
+        else if (command.commandName === CommandNames.GET_CURRENCIES) {
+          const query = getQuery(request)
+          setQueryObj({body: query.fields})
+          await getCurrencies({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.GET_MENTORS) {
+          const query = getQuery(request)
+          setQueryObj({body: query.fields})
+          await getMentors({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.GET_PROJECTS) {
+          const query = getQuery(request)
+          setQueryObj({body: query.fields})
+          await getProjects({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.GET_PROXIES) {
+          const query = getQuery(request)
+          setQueryObj({body: query.fields})
+          await getProxies({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.GET_REQUESTS) {
+          const query = getQuery(request)
+          setQueryObj({body: query.fields})
+          await getRequests({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.ADD_USER) {
+          const mutation = getAddEntityMutation(request)
           await addUser({variables: {input: mutation.filter}})
-        } else if (command.commandName === CommandNames.DELETE_USERS && command.valuesKey === "-values") {
-          const query = getDeleteUserMutation(request)
+        }
+        else if (command.commandName === CommandNames.ADD_CURRENCY) {
+          const mutation = getAddEntityMutation(request)
+          await addCurrency({variables: {input: mutation.filter}})
+        }
+        else if (command.commandName === CommandNames.ADD_MENTOR) {
+          const mutation = getAddEntityMutation(request)
+          await addMentor({variables: {input: mutation.filter}})
+        }
+        else if (command.commandName === CommandNames.ADD_PROJECT) {
+          const mutation = getAddEntityMutation(request)
+          await addProject({variables: {input: mutation.filter}})
+        }
+        else if (command.commandName === CommandNames.ADD_PROXY) {
+          const mutation = getAddEntityMutation(request)
+          await addProxy({variables: {input: mutation.filter}})
+        }
+        else if (command.commandName === CommandNames.ADD_REQUEST) {
+          const mutation = getAddEntityMutation(request)
+          await addRequest({variables: {input: mutation.filter}})
+        }
+        else if (command.commandName === CommandNames.DELETE_USERS) {
+          const query = getDeleteEntityMutation(request)
           await deleteUsers({variables: {input: query.filter}})
-        } else if (command.commandName === CommandNames.UPDATE_USERS && command.valuesKey === "-values") {
-
-          let mutation = getUpdateUsersMutation(request)
+        }
+        else if (command.commandName === CommandNames.DELETE_CURRENCIES) {
+          const query = getDeleteEntityMutation(request)
+          await deleteCurrencies({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.DELETE_MENTORS) {
+          const query = getDeleteEntityMutation(request)
+          await deleteMentors({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.DELETE_PROJECTS) {
+          const query = getDeleteEntityMutation(request)
+          await deleteProjects({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.DELETE_PROXIES) {
+          const query = getDeleteEntityMutation(request)
+          await deleteProxies({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.DELETE_REQUESTS) {
+          const query = getDeleteEntityMutation(request)
+          await deleteRequests({variables: {input: query.filter}})
+        }
+        else if (command.commandName === CommandNames.UPDATE_USERS) {
+          let mutation = getUpdateEntityMutation(request)
           console.log(mutation.filter)
-          await updateUsers({
-            variables:
-              {
-                input:
-                  {
-                    filter: mutation.filter,
-                    set: mutation.set
-                  }
-              }
-          })
-
-
+          await updateUsers({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+        }
+        else if (command.commandName === CommandNames.UPDATE_MENTORS) {
+          let mutation = getUpdateEntityMutation(request)
+          console.log(mutation.filter)
+          await updateMentors({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+        }
+        else if (command.commandName === CommandNames.UPDATE_PROJECTS) {
+          let mutation = getUpdateEntityMutation(request)
+          console.log(mutation.filter)
+          await updateProjects({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+        }
+        else if (command.commandName === CommandNames.UPDATE_PROXIES) {
+          let mutation = getUpdateEntityMutation(request)
+          console.log(mutation.filter)
+          await updateProxies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+        }
+        else if (command.commandName === CommandNames.UPDATE_REQUESTS) {
+          let mutation = getUpdateEntityMutation(request)
+          console.log(mutation.filter)
+          await updateRequests({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+        }
+        else if (command.commandName === CommandNames.UPDATE_CURRENCIES) {
+          let mutation = getUpdateEntityMutation(request)
+          console.log(mutation.filter)
+          await updateCurrencies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
         }
       }
     } else {

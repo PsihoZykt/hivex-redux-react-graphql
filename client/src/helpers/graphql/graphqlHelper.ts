@@ -16,7 +16,7 @@ export const getQuery = (input: String): QueryGetUsersType => {
   return queryObj
 }
 
-export const getAddUserMutation = (request: String) => {
+export const getAddEntityMutation = (request: String) => {
 
   const values = getValues(request)
   let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
@@ -25,7 +25,7 @@ export const getAddUserMutation = (request: String) => {
   return mutationObj
 
 }
-export const getDeleteUserMutation = (request: String) => {
+export const getDeleteEntityMutation = (request: String) => {
   const values = getValues(request)
   let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
   let mutations = getQueryArr(fieldsWithFilters)
@@ -33,7 +33,7 @@ export const getDeleteUserMutation = (request: String) => {
   return mutationObj
 
 }
-export let getUpdateUsersMutation = (request: String) => {
+export let getUpdateEntityMutation = (request: String) => {
   //update-users -values a -f 1 | b -f 2 -set a=123
   let valuesAndSet = getValues(request)
   let [values, set] = valuesAndSet.split("-set")

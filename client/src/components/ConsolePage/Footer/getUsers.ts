@@ -47,7 +47,7 @@ export const getUsersQuery =
 export const createGetUsersQuery = ({body}: any) => {
     try {
         return gql`query GetUsers($input: UserFilter) {
-            getUsers(filter: $input) {
+            getUsers(input: $input) {
                 ${body}
             }
         }`
@@ -63,7 +63,7 @@ export const ADD_USER = gql`mutation GetUsers($input: UserInput) {
     }
 }`
 export const DELETE_USERS = gql`mutation DeleteUsers($input: UserFilter){
-    deleteUser(input: $input){
+    deleteUsers(input: $input){
         name, _id
     }
 }`

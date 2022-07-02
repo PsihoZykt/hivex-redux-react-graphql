@@ -8,3 +8,33 @@ export const getRequestsQuery = gql`query GetRequests {
         createdAt
     }
 }`
+export const createGetRequestsQuery = ({body}: any) => {
+    try {
+        return gql`query GetRequests($input: RequestFilter) {
+            getRequests(input: $input) {
+                ${body}
+            }
+        }`
+    } catch (e: any) {
+        console.log(e)
+    }
+
+}
+
+export const ADD_REQUEST = gql`mutation GetRequests($input: RequestInput) {
+    addRequest(input: $input) {
+        _id, createdAt,request,response
+    }
+}`
+export const DELETE_REQUESTS = gql`mutation DeleteRequests($input: RequestFilter){
+    deleteRequests(input: $input){
+        _id, createdAt,request,response
+
+    }
+}`
+export const UPDATE_REQUESTS = gql`mutation UpdateRequests($input: UpdateRequestInput){
+    updateRequests(input: $input){
+        _id, createdAt,request,response
+
+    }
+}`

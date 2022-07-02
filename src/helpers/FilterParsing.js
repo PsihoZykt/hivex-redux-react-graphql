@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export function getKeysArrFromObject(obj) {
     const isObject = val =>
         val && typeof val === 'object' && !Array.isArray(val);
@@ -35,7 +37,19 @@ export function toDotList(obj) {
             else into[[...prefix, key].join(".")] = val;
         });
     }
+
     const out = {};
     walk(out, obj);
     return out;
+}
+
+export const getFilteredEntity = (entity, filter) => {
+    let filteredEntity = entity;
+    let keys = getKeysArrFromObject(filter)
+    keys.forEach((key) => {
+        filteredEntity = _.filter(entity, (data) => {
+            return _.get(filter, key) === _.get(data, key)
+        })
+    })
+    return filteredEntity
 }

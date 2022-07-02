@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@graphql-tools/schema": "^8.5.0",
     "apollo-server-express": "^3.9.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",

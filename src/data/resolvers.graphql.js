@@ -1,6 +1,4 @@
 import {Currencies, Mentors, Projects, Proxies, Requests, Users} from "../db/dbConnector.js";
-import {getKeysArrFromObject} from "../helpers/FilterParsing.js";
-import _ from "lodash";
 
 /**
  * GraphQL Resolvers
@@ -8,7 +6,7 @@ import _ from "lodash";
 
 
 // Add item to Entity collection
-const mongoDBAddEntityResolver = (Entity, _root, input) => {
+export const mongoDBAddEntityResolver = (Entity, _root, input) => {
   const newItem = new Entity({...input});
   return new Promise((resolve, reject) => {
     newItem.save((err, item) => {
@@ -18,7 +16,7 @@ const mongoDBAddEntityResolver = (Entity, _root, input) => {
     });
   });
 }
-const mongoDBDeleteUserResolver = async (Entity, _root, input) => {
+export const mongoDBDeleteEntitiesResolver = async (Entity, _root, input) => {
   const isFilter = Object.keys(input).length !== 0;
   if (isFilter) {
     const users = await Entity.find(input);
@@ -26,86 +24,19 @@ const mongoDBDeleteUserResolver = async (Entity, _root, input) => {
     return users;
   }
 }
-const mongoDBUpdateUsersResolver = async (Entity, _root, input) => {
+export const mongoDBUpdateEntitiesResolver = async (Entity, _root, input) => {
   let {filter, set} = input
-  console.log(filter)
-  console.log(set)
-
+  console.log(input)
   const isFilter = Object.keys(filter).length !== 0;
   if (isFilter) {
     await Entity.updateMany(filter, {$set: set})
-    const updatedUsers = await Entity.find({set})
-    return updatedUsers
+    return await Entity.find({set})
   }
 
 }
 export const resolvers = {
   Query: {
-    getUsers: (parent, args, context, info) => {
-      const {filter} = args;
 
-      const shouldApplyFilters = filter !== null;
-
-      return new Promise(async (resolve, reject) => {
-        let query = {};
-        let filterFieldsArr = [{}]
-        let filterFields = {}
-        if (filter) {
-          let keys = getKeysArrFromObject(filter)
-          keys.forEach(key => {
-            filterFieldsArr.push({[key]: {$eq: _.get(filter, key)}})
-          })
-          console.log(filterFieldsArr)
-          query = {
-            "$and": [
-              ...filterFieldsArr
-            ]
-          }
-        }
-
-        const match = {
-          $match: query
-        }
-
-        const res = Users.aggregate(
-            [
-              {
-                $lookup:
-                    {
-                      from: "projects",
-                      localField: "project",
-                      pipeline: [{
-                        $lookup: {
-                          from: "mentors",
-                          localField: "mentor",
-                          foreignField: "_id",
-                          as: "mentor"
-                        }
-                      }, {
-                        $unwind: {
-                          path: "$mentor",
-                          "preserveNullAndEmptyArrays": true
-                        }
-                      }],
-                      foreignField: "_id",
-                      as: "project"
-                    }
-              },
-              {
-                $unwind: {
-                  path: "$project",
-                  "preserveNullAndEmptyArrays": true
-                }
-              },
-              match,
-
-
-            ]).then(res => {
-          resolve(res)
-        })
-
-      })
-    },
     getProjects: async () => {
       return new Promise((resolve, reject) => {
         Projects.find().populate("mentor").then((entity) => {
@@ -157,9 +88,7 @@ export const resolvers = {
       return await mongoDBAddEntityResolver(Currencies, root, input)
 
     },
-    addUser: async (root, {input}) => {
-      return await mongoDBAddEntityResolver(Users, root, input)
-    },
+
     addRequest: async (root, {input}) => {
 
       input.createdAt = new Date();
@@ -170,7 +99,10 @@ export const resolvers = {
     },
     updateUsers: async (root, {input}) => {
       return await mongoDBUpdateUsersResolver(Users, root, input)
-    }
+    },
+    addUser: async (root, {input}) => {
+      return await mongoDBAddEntityResolver(Users, root, input)
+    },
 
   },
 };

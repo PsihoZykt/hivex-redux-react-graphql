@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import path from 'path'
 import {ApolloServer} from "apollo-server-express";
-import {typeDefs} from "./data/schema.graphql.js";
+import schema from "./data/schema.graphql.js";
 import {resolvers} from "./data/resolvers.graphql.js";
 import {PORT} from "./config/config.js";
 import {fileURLToPath} from "url";
@@ -15,8 +15,7 @@ const __dirname = path.dirname(__filename);
  */
 
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema
     // csrfPrevention: true,
     // cache: 'bounded',
 });
