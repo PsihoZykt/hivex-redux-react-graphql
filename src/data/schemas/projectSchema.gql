@@ -37,12 +37,12 @@ input UpdateProjectInput {
     filter: ProjectFilter!
     set: ProjectSetFilter
 }
-type Query {
+extend type Query {
 
     getProjects(input: ProjectFilter): [Project]
 }
 
-type Mutation {
+extend type Mutation {
     addProject(input: ProjectInput): Project
     updateProjects(input: UpdateProjectInput): [Project]
     deleteProjects(input: ProjectInput): [Project]

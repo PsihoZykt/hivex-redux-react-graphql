@@ -28,10 +28,11 @@ input UpdateRequestInput {
     set: RequestSetFilter
 }
 
-type Query {
+
+extend type Query {
     getRequests(input: RequestFilter): [Request]
 }
-type Mutation {
+extend type Mutation {
     addRequest(input: RequestInput): Request
     updateRequests(input: UpdateRequestInput): [Request]
     deleteRequests(input: RequestInput): [Request]

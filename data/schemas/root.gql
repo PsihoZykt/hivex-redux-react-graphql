@@ -1,0 +1,299 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Currency {
+    _id: ID
+    code: String
+    name: String
+}
+
+type Mentor {
+    _id: ID
+    country: String
+    level: Level
+    name: String
+    salary: Int
+    techStack: String
+    timestamp: Int
+    workDuration: Int
+}
+
+type Mutation {
+    addCurrency(input: CurrencyInput): Currency
+    addMentor(input: MentorInput): Mentor
+    addProject(input: ProjectInput): Project
+    addProxy(input: ProxyInput): Proxy
+    addRequest(input: RequestInput): Request
+    addUser(input: UserInput): User
+    deleteCurrencies(input: CurrencyFilter): [Currency]
+    deleteMentors(input: MentorInput): [Mentor]
+    deleteProjects(input: ProjectInput): [Project]
+    deleteProxies(input: ProxyInput): [Proxy]
+    deleteRequests(input: RequestInput): [Request]
+    deleteUsers(input: UserFilter): [User]
+    updateCurrencies(input: UpdateCurrencyInput): [Currency]
+    updateMentors(input: UpdateMentorInput): [Mentor]
+    updateProjects(input: UpdateProjectInput): [Project]
+    updateProxies(input: UpdateProxyInput): [Proxy]
+    updateRequests(input: UpdateRequestInput): [Request]
+    updateUsers(input: UpdateUsersInput): [User]
+}
+
+type Project {
+    _id: ID
+    country: String
+    duration: Int
+    mentor: Mentor
+    name: String
+    status: ProjectStatus
+    techStack: String
+    timestamp: Int
+}
+
+type Proxy {
+    _id: ID
+    bank: String
+    country: String
+    currency: Currency
+    name: String
+    timestamp: Int
+}
+
+type Query {
+    getCurrencies(input: CurrencyFilter): [Currency]
+    getMentors(input: MentorFilter): [Mentor]
+    getProjects(input: ProjectFilter): [Project]
+    getProxies(input: ProxyFilter): [Proxy]
+    getRequests(input: RequestFilter): [Request]
+    getUsers(input: UserFilter): [User]
+}
+
+type Request {
+    _id: ID
+    createdAt: Date
+    request: String
+    response: String
+}
+
+type User {
+    _id: ID
+    level: Level
+    name: String
+    project: Project
+    proxy: Proxy
+    salary: Int
+    techStack: String
+    timeStamp: Int
+    workDuration: Int
+}
+
+enum Level {
+    junior
+    middle
+    senior
+}
+
+enum ProjectStatus {
+    active
+    closed
+    open
+}
+
+enum Role {
+    mentor
+    worker
+}
+
+scalar Date
+
+scalar JSON
+
+input CurrencyFilter {
+    _id: ID
+    code: String
+    name: String
+}
+
+input CurrencyInput {
+    _id: ID
+    code: String
+    name: String
+}
+
+input CurrencySetFilter {
+    code: String
+    name: String
+}
+
+input MentorFilter {
+    _id: ID
+    country: String
+    level: Level
+    name: String
+    salary: Int
+    techStack: String
+    timestamp: Int
+    workDuration: Int
+}
+
+input MentorInput {
+    _id: ID
+    country: String
+    level: Level
+    name: String
+    salary: Int
+    techStack: String
+    timestamp: Int
+    workDuration: Int
+}
+
+input MentorSetFilter {
+    country: String
+    level: Level
+    name: String
+    salary: Int
+    techStack: String
+    timestamp: Int
+    workDuration: Int
+}
+
+input ProjectFilter {
+    _id: ID
+    country: String
+    duration: Int
+    mentor: MentorFilter
+    name: String
+    status: ProjectStatus
+    techStack: String
+    timestamp: Int
+}
+
+input ProjectInput {
+    _id: ID
+    country: String
+    duration: Int
+    mentor: MentorInput
+    name: String
+    status: ProjectStatus
+    techStack: String
+    timestamp: Int
+}
+
+input ProjectSetFilter {
+    country: String
+}
+
+input ProxyFilter {
+    _id: ID
+    bank: String
+    country: String
+    currency: CurrencyFilter
+    name: String
+    timestamp: Int
+}
+
+input ProxyInput {
+    _id: ID
+    bank: String
+    country: String
+    currency: CurrencyInput
+    name: String
+    timestamp: Int
+}
+
+input ProxySetFilter {
+    bank: String
+    country: String
+    currency: CurrencyInput
+    name: String
+    timestamp: Int
+}
+
+input RequestFilter {
+    _id: ID
+    createdAt: Date
+    request: String
+    response: String
+}
+
+input RequestInput {
+    _id: ID
+    createdAt: Date
+    request: String
+    response: String
+}
+
+input RequestSetFilter {
+    createdAt: Date
+    request: String
+    response: String
+}
+
+input UpdateCurrencyInput {
+    filter: CurrencyFilter!
+    set: CurrencySetFilter
+}
+
+input UpdateMentorInput {
+    filter: MentorFilter!
+    set: MentorSetFilter
+}
+
+input UpdateProjectInput {
+    filter: ProjectFilter!
+    set: ProjectSetFilter
+}
+
+input UpdateProxyInput {
+    filter: ProxyFilter!
+    set: ProxySetFilter
+}
+
+input UpdateRequestInput {
+    filter: RequestFilter!
+    set: RequestSetFilter
+}
+
+input UpdateUsersInput {
+    filter: UserFilter!
+    set: UserSetFilter
+}
+
+input UserFilter {
+    _id: ID
+    level: Level
+    name: String
+    project: ProjectFilter
+    proxy: ProxyFilter
+    salary: Int
+    techStack: String
+    timestamp: Int
+    workDuration: Int
+}
+
+input UserInput {
+    _id: ID
+    level: Level
+    name: String
+    project: ProjectInput
+    proxy: ProxyInput
+    salary: Int
+    techStack: String
+    timestamp: Int
+    workDuration: Int
+}
+
+input UserSetFilter {
+    level: Level
+    name: String
+    project: ProjectSetFilter
+    proxy: ProxyFilter
+    salary: Int
+    techStack: String
+    timestamp: Int
+    workDuration: Int
+}

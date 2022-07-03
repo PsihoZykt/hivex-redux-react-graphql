@@ -1,0 +1,18 @@
+query getUsers {
+    getUsers{
+        _id
+        name, level, salary, techStack,timeStamp, workDuration
+        project {
+            _id
+            techStack,name,country,duration,status,timestamp,
+            mentor {
+                _id, timestamp,country,name,techStack,workDuration,salary,level
+            }
+        }, proxy {
+            _id
+            name,country,timestamp,bank,currency {
+                _id, name,code
+            }
+        }
+    }
+}

@@ -26,12 +26,12 @@ input UpdateCurrencyInput {
 }
 
 
-type Query {
+extend type Query {
     getCurrencies(input: CurrencyFilter): [Currency]
 }
 
 
-type Mutation {
+extend type Mutation {
     addCurrency(input: CurrencyInput): Currency
     updateCurrencies(input: UpdateCurrencyInput): [Currency]
     deleteCurrencies(input: CurrencyFilter): [Currency]

@@ -45,12 +45,12 @@
         set: MentorSetFilter
     }
 
-    type Query {
+    extend type Query {
         getMentors(input: MentorFilter): [Mentor]
     }
 
 
-    type Mutation {
+    extend type Mutation {
         addMentor(input: MentorInput): Mentor
         updateMentors(input: UpdateMentorInput): [Mentor]
         deleteMentors(input: MentorInput): [Mentor]

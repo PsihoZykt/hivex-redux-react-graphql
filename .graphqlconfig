@@ -1,15 +1,26 @@
 {
-  "name": "Untitled GraphQL Schema",
-  "schemaPath": "./data/schema.graphql.js",
+  "name": "Hivex GraphQL",
+  "schemaPath": "./src/data/schemas/root.gql",
+  "projects": {
+    "app": {
+      "includes": [
+        "./src/data/schemas/**"
+      ],
+      "excludes": [
+        "./src/data/schemas/root.gql"
+      ]
+    }
+  },
   "extensions": {
     "endpoints": {
       "Default GraphQL Endpoint": {
-        "url": "http://localhost:8080",
+        "url": "http://localhost:8080/graphql",
         "headers": {
           "user-agent": "JS GraphQL"
         },
-        "introspect": false
+        "introspect": true
       }
     }
   }
+
 }

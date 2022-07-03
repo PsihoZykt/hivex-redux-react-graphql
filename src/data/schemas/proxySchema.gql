@@ -1,3 +1,4 @@
+
 type Proxy {
     _id: ID,
     name: String,
@@ -36,12 +37,12 @@ input UpdateProxyInput {
     filter: ProxyFilter!
     set: ProxySetFilter
 }
-type Query {
+extend type Query {
     getProxies(input: ProxyFilter): [Proxy]
 }
 
 
-type Mutation {
+extend type Mutation {
     addProxy(input: ProxyInput): Proxy
     updateProxies(input: UpdateProxyInput): [Proxy]
     deleteProxies(input: ProxyInput): [Proxy]
