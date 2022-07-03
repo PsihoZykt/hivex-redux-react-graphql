@@ -1,0 +1,15 @@
+enum ProjectStatus {
+    open
+    active
+    closed
+}
+
+enum Role {
+    mentor
+    worker
+}
+enum Level {
+    junior
+    middle
+    senior
+}

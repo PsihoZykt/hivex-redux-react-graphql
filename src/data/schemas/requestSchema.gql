@@ -1,0 +1,38 @@
+type Request {
+    _id: ID,
+    request: String,
+    response: String,
+    createdAt: Date
+}
+input RequestInput {
+    _id: ID,
+    request: String,
+    response: String,
+    createdAt: Date,
+}
+input RequestFilter {
+    _id: ID,
+    request: String,
+    response: String,
+    createdAt: Date
+}
+
+
+input RequestSetFilter {
+    request: String,
+    response: String,
+    createdAt: Date,
+}
+input UpdateRequestInput {
+    filter: RequestFilter!
+    set: RequestSetFilter
+}
+
+type Query {
+    getRequests(input: RequestFilter): [Request]
+}
+type Mutation {
+    addRequest(input: RequestInput): Request
+    updateRequests(input: UpdateRequestInput): [Request]
+    deleteRequests(input: RequestInput): [Request]
+}

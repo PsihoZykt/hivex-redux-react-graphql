@@ -1,0 +1,48 @@
+type Proxy {
+    _id: ID,
+    name: String,
+    country: String,
+    timestamp: Int,
+    bank: String,
+    currency: Currency
+}
+
+input ProxyInput {
+    _id: ID,
+    name: String,
+    country: String,
+    timestamp: Int,
+    bank: String,
+    currency: CurrencyInput
+}
+input ProxyFilter {
+    _id: ID,
+    name: String,
+    country: String,
+    timestamp: Int,
+    bank: String,
+    currency: CurrencyFilter
+}
+
+
+input ProxySetFilter {
+    name: String,
+    country: String,
+    timestamp: Int,
+    bank: String,
+    currency: CurrencyInput
+}
+input UpdateProxyInput {
+    filter: ProxyFilter!
+    set: ProxySetFilter
+}
+type Query {
+    getProxies(input: ProxyFilter): [Proxy]
+}
+
+
+type Mutation {
+    addProxy(input: ProxyInput): Proxy
+    updateProxies(input: UpdateProxyInput): [Proxy]
+    deleteProxies(input: ProxyInput): [Proxy]
+}

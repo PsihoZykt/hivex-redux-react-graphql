@@ -3,15 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "jest": {
+    "transform": {
+      "\\.(gql|graphql)$": "jest-transform-graphql",
+      ".*": "babel-jest"
+    }
+  },
   "dependencies": {
+    "@graphql-tools/graphql-file-loader": "^7.4.0",
     "@graphql-tools/schema": "^8.5.0",
+    "@jest/globals": "^28.1.2",
     "apollo-server-express": "^3.9.0",
+    "babel-jest": "^28.1.2",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "easygraphql-tester": "^6.0.1",
     "express": "^4.18.1",
     "graphql": "^16.5.0",
     "graphql-iso-date": "^3.6.1",
     "graphql.macro": "^1.4.2",
+    "jest": "^28.0.0-alpha.11",
+    "jest-transform-graphql": "^2.1.0",
     "mongoose": "^6.4.0"
   },
   "scripts": {
@@ -25,6 +37,8 @@
     "generate": "graphql-codegen --config codegen.yml"
   },
   "devDependencies": {
+    "@graphql-tools/load": "^7.7.0",
+    "@graphql-tools/load-files": "^6.6.0",
     "@types/lodash": "^4.14.182",
     "concurrently": "^7.2.2",
     "dotenv": "^16.0.1",

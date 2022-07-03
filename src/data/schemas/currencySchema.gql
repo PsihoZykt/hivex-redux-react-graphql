@@ -1,0 +1,38 @@
+input CurrencyInput {
+    _id: ID,
+    name: String,
+    code: String,
+}
+
+type Currency {
+    _id: ID,
+    name: String,
+    code: String
+}
+input CurrencyFilter {
+    _id: ID,
+    name: String,
+    code: String
+}
+input CurrencySetFilter {
+    name: String,
+    code: String
+}
+
+
+input UpdateCurrencyInput {
+    filter: CurrencyFilter!
+    set: CurrencySetFilter
+}
+
+
+type Query {
+    getCurrencies(input: CurrencyFilter): [Currency]
+}
+
+
+type Mutation {
+    addCurrency(input: CurrencyInput): Currency
+    updateCurrencies(input: UpdateCurrencyInput): [Currency]
+    deleteCurrencies(input: CurrencyFilter): [Currency]
+}

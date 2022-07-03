@@ -1,0 +1,49 @@
+type Project {
+    _id: ID,
+    name: String,
+    status: ProjectStatus,
+    mentor: Mentor,
+    country: String,
+    duration: Int,
+    timestamp: Int,
+    techStack: String
+}
+input ProjectInput {
+    _id: ID,
+    name: String,
+    status: ProjectStatus,
+    mentor: MentorInput,
+    country: String,
+    duration: Int,
+    timestamp: Int,
+    techStack: String
+}
+input ProjectFilter {
+    _id: ID,
+    name: String,
+    status: ProjectStatus,
+    mentor: MentorFilter,
+    country: String,
+    duration: Int,
+    timestamp: Int,
+    techStack: String
+
+}
+input ProjectSetFilter {
+    country: String,
+}
+
+input UpdateProjectInput {
+    filter: ProjectFilter!
+    set: ProjectSetFilter
+}
+type Query {
+
+    getProjects(input: ProjectFilter): [Project]
+}
+
+type Mutation {
+    addProject(input: ProjectInput): Project
+    updateProjects(input: UpdateProjectInput): [Project]
+    deleteProjects(input: ProjectInput): [Project]
+}
