@@ -1,5 +1,9 @@
 scalar JSON
 scalar Date
+scalar String
+scalar Int
+scalar ID
+
 
 type User {
     _id: ID,
