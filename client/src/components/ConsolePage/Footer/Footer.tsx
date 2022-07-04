@@ -2,7 +2,7 @@ import GithubLink from 'common/GithubLink/GithubLink'
 import format from 'assets/img/consolePage/format.svg'
 import React, {Dispatch, useState} from 'react'
 import './Footer.css'
-import {useLazyQuery, useMutation, useQuery} from "@apollo/client";
+import {MutationHookOptions, useLazyQuery, useMutation, useQuery} from "@apollo/client";
 import {
   ADD_USER,
   createGetUsersQuery,
@@ -57,98 +57,25 @@ import {
 import {GraphQLUserFieldType} from "types/EntityTypes/GraphQLUserFieldType";
 import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 import {GraphQLCurrencyFieldType} from "types/EntityTypes/GraphQLCurrencyFieldType";
+import {CommandNames, CommandType, Fields} from "components/ConsolePage/Footer/Commands/CommandTypes";
+import {GraphQLMentorFieldType} from "types/EntityTypes/GraphQLMentorFieldType";
+import {GraphQLProjectFieldType} from "types/EntityTypes/GraphQLProjectFieldType";
+import {GraphQLProxyFieldType} from "types/EntityTypes/GraphQLProxyFieldType";
+import {GraphQLRequestFieldType} from "types/EntityTypes/GraphQLRequestFieldType";
 
 type FooterProps = {
   request: String
   setResponse: Dispatch<string>
 }
 
-export enum CommandNames {
-  GET_FIELDS = "get-fields",
-  GET_USERS = "get-users",
-  ADD_USER = "add-user",
-  DELETE_USERS = "delete-users",
-  UPDATE_USERS = "update-users",
-
-  GET_CURRENCIES = "get-currencies",
-  ADD_CURRENCY = "add-currency",
-  DELETE_CURRENCIES = "delete-currencies",
-  UPDATE_CURRENCIES = "update-currencies",
-
-  GET_MENTORS = "get-mentors",
-  ADD_MENTOR = "add-mentors",
-  DELETE_MENTORS = "delete-mentors",
-  UPDATE_MENTORS = "update-mentors",
-
-  GET_PROJECTS = "get-projects",
-  ADD_PROJECT = "add-project",
-  DELETE_PROJECTS = "delete-projects",
-  UPDATE_PROJECTS = "update-projects",
-
-  GET_PROXIES = "get-proxies",
-  ADD_PROXY = "add-proxy",
-  DELETE_PROXIES = "delete-proxies",
-  UPDATE_PROXIES = "update-proxies",
-
-  GET_REQUESTS = "get-requests",
-  ADD_REQUEST = "add-request",
-  DELETE_REQUESTS = "delete-requests",
-  UPDATE_REQUESTS = "update-requests",
-
-}
-
-export enum Fields {
-  USERS = 'users',
-  CURRENCIES = "currencies",
-  MENTORS = "mentors",
-  PROXIES = "proxies",
-  REQUESTS = "requests",
-  PROJECTS = "projects"
-}
-
-
-export type CommandType = {
-  prefix: "hivex"
-  commandName: CommandNames
-  valuesKey: "-values"
-}
 export const Footer = ({request, setResponse}: FooterProps) => {
+  const queryOptions: MutationHookOptions = {
+    errorPolicy: "ignore", onCompleted: (data: any) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  }
 
   const [queryFieldsArr, setQueryFieldsArr] = useState<GraphqlAnyEntityFieldType[]>(["name"])
-  const [getUsers, getUsersData] = useLazyQuery(createGetUsersQuery(queryFieldsArr), {
-    errorPolicy: "ignore", onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-
-
-  const [getCurrencies, getCurrenciesData] = useLazyQuery(createGetCurrenciesQuery(queryFieldsArr), {
-    errorPolicy: "ignore", onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-
-  const [getMentors, getMentorsData] = useLazyQuery(createGetMentorsQuery(queryFieldsArr), {
-    errorPolicy: "ignore", onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [getProjects, getProjectsData] = useLazyQuery(createGetProjectsQuery(queryFieldsArr), {
-    errorPolicy: "ignore", onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [getProxies, getProxiesData] = useLazyQuery(createGetProxiesQuery(queryFieldsArr), {
-    errorPolicy: "ignore", onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [getRequests, getRequestsData] = useLazyQuery(createGetRequestsQuery(queryFieldsArr), {
-    errorPolicy: "ignore", onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-
 
   const usersData = useQuery(getUsersQuery)
   const currenciesData = useQuery(getCurrenciesQuery)
@@ -156,102 +83,31 @@ export const Footer = ({request, setResponse}: FooterProps) => {
   const proxiesData = useQuery(getProxiesQuery)
   const requestsData = useQuery(getRequestsQuery)
   const projectsData = useQuery(getProjectsQuery)
-  const [addUser, addUserData] = useMutation(ADD_USER, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [addCurrency, addCurrencyData] = useMutation(ADD_CURRENCY, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-
-  const [addMentor, addMentorData] = useMutation(ADD_MENTOR, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-
-  const [addProject, addProjectData] = useMutation(ADD_PROJECT, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [addProxy, addProxyData] = useMutation(ADD_PROXY, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-
-
-  const [addRequest, addRequestData] = useMutation(ADD_REQUEST, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [deleteUsers, deleteUsersData] = useMutation(DELETE_USERS, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [deleteCurrencies, deleteCurrenciesData] = useMutation(DELETE_CURRENCIES, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [deleteMentors, deleteMentorsData] = useMutation(DELETE_MENTORS, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [deleteProjects, deleteProjectsData] = useMutation(DELETE_PROJECTS, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [deleteProxies, deleteProxiesData] = useMutation(DELETE_PROXIES, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [deleteRequests, deleteRequestData] = useMutation(DELETE_REQUESTS, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-
-
-  const [updateUsers, updateUsersData] = useMutation(UPDATE_USERS, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [updateCurrencies, updateCurrenciesData] = useMutation(UPDATE_CURRENCIES, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [updateMentors, updateMentorsData] = useMutation(UPDATE_MENTORS, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [updateProjects, updateProjectsData] = useMutation(UPDATE_PROJECTS, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [updateProxies, updateUProxiesData] = useMutation(UPDATE_PROXIES, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [updateRequests, updateRequestsData] = useMutation(UPDATE_REQUESTS, {
-    onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
+  //TODO:  Использовать все эти даты, запихать их в массив, и выводить загрузку пока не загрузятся все или че нить такой
+  const [getUsers, getUsersData] = useLazyQuery(createGetUsersQuery(queryFieldsArr), queryOptions)
+  const [getCurrencies, getCurrenciesData] = useLazyQuery(createGetCurrenciesQuery(queryFieldsArr), queryOptions)
+  const [getMentors, getMentorsData] = useLazyQuery(createGetMentorsQuery(queryFieldsArr), queryOptions)
+  const [getProjects, getProjectsData] = useLazyQuery(createGetProjectsQuery(queryFieldsArr), queryOptions)
+  const [getProxies, getProxiesData] = useLazyQuery(createGetProxiesQuery(queryFieldsArr), queryOptions)
+  const [getRequests, getRequestsData] = useLazyQuery(createGetRequestsQuery(queryFieldsArr), queryOptions)
+  const [addUser, addUserData] = useMutation(ADD_USER, queryOptions)
+  const [addCurrency, addCurrencyData] = useMutation(ADD_CURRENCY, queryOptions)
+  const [addMentor, addMentorData] = useMutation(ADD_MENTOR, queryOptions)
+  const [addProject, addProjectData] = useMutation(ADD_PROJECT, queryOptions)
+  const [addProxy, addProxyData] = useMutation(ADD_PROXY, queryOptions)
+  const [addRequest, addRequestData] = useMutation(ADD_REQUEST, queryOptions)
+  const [deleteUsers, deleteUsersData] = useMutation(DELETE_USERS, queryOptions)
+  const [deleteCurrencies, deleteCurrenciesData] = useMutation(DELETE_CURRENCIES, queryOptions)
+  const [deleteMentors, deleteMentorsData] = useMutation(DELETE_MENTORS, queryOptions)
+  const [deleteProjects, deleteProjectsData] = useMutation(DELETE_PROJECTS, queryOptions)
+  const [deleteProxies, deleteProxiesData] = useMutation(DELETE_PROXIES, queryOptions)
+  const [deleteRequests, deleteRequestData] = useMutation(DELETE_REQUESTS, queryOptions)
+  const [updateUsers, updateUsersData] = useMutation(UPDATE_USERS, queryOptions)
+  const [updateCurrencies, updateCurrenciesData] = useMutation(UPDATE_CURRENCIES, queryOptions)
+  const [updateMentors, updateMentorsData] = useMutation(UPDATE_MENTORS, queryOptions)
+  const [updateProjects, updateProjectsData] = useMutation(UPDATE_PROJECTS, queryOptions)
+  const [updateProxies, updateUProxiesData] = useMutation(UPDATE_PROXIES, queryOptions)
+  const [updateRequests, updateRequestsData] = useMutation(UPDATE_REQUESTS, queryOptions)
 
 
   const onSubmitRequest = async () => {
@@ -265,7 +121,6 @@ export const Footer = ({request, setResponse}: FooterProps) => {
     }
     try {
       if (command.prefix === "hivex") {
-
         if (command.commandName === CommandNames.GET_FIELDS) {
           const fields = getValues(request)
           if (fields.includes(Fields.PROJECTS)) {
@@ -287,92 +142,136 @@ export const Footer = ({request, setResponse}: FooterProps) => {
             response += getFormattedJSON(JSON.stringify(mentorsData.data))
           }
           setResponse(response)
-        } else if (command.valuesKey === "-values") {
-          if (command.commandName === CommandNames.GET_USERS) {
-            const query = getQuery<GraphQLUserFieldType>(request)
-            setQueryFieldsArr(query.fields)
-            await getUsers({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.GET_CURRENCIES) {
-            const query = getQuery<GraphQLCurrencyFieldType>(request)
-            setQueryFieldsArr(query.fields)
-            await getCurrencies({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.GET_MENTORS) {
-            const query = getQuery(request)
+        }
+        else if (command.valuesKey === "-values") {
 
-            setQueryFieldsArr( query.fields)
-            await getMentors({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.GET_PROJECTS) {
-            const query = getQuery(request)
-            setQueryFieldsArr(query.fields)
-            await getProjects({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.GET_PROXIES) {
-            const query = getQuery(request)
-            setQueryFieldsArr(query.fields)
-            await getProxies({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.GET_REQUESTS) {
-            const query = getQuery(request)
-            setQueryFieldsArr( query.fields)
-            await getRequests({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.ADD_USER) {
-            const mutation = getAddEntityMutation(request)
-            await addUser({variables: {input: mutation.filter}})
-          } else if (command.commandName === CommandNames.ADD_CURRENCY) {
-            const mutation = getAddEntityMutation(request)
-            await addCurrency({variables: {input: mutation.filter}})
-          } else if (command.commandName === CommandNames.ADD_MENTOR) {
-            const mutation = getAddEntityMutation(request)
-            await addMentor({variables: {input: mutation.filter}})
-          } else if (command.commandName === CommandNames.ADD_PROJECT) {
-            const mutation = getAddEntityMutation(request)
-            await addProject({variables: {input: mutation.filter}})
-          } else if (command.commandName === CommandNames.ADD_PROXY) {
-            const mutation = getAddEntityMutation(request)
-            await addProxy({variables: {input: mutation.filter}})
-          } else if (command.commandName === CommandNames.ADD_REQUEST) {
-            const mutation = getAddEntityMutation(request)
-            await addRequest({variables: {input: mutation.filter}})
-          } else if (command.commandName === CommandNames.DELETE_USERS) {
-            const query = getDeleteEntityMutation(request)
-            await deleteUsers({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.DELETE_CURRENCIES) {
-            const query = getDeleteEntityMutation(request)
-            await deleteCurrencies({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.DELETE_MENTORS) {
-            const query = getDeleteEntityMutation(request)
-            await deleteMentors({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.DELETE_PROJECTS) {
-            const query = getDeleteEntityMutation(request)
-            await deleteProjects({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.DELETE_PROXIES) {
-            const query = getDeleteEntityMutation(request)
-            await deleteProxies({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.DELETE_REQUESTS) {
-            const query = getDeleteEntityMutation(request)
-            await deleteRequests({variables: {input: query.filter}})
-          } else if (command.commandName === CommandNames.UPDATE_USERS) {
-            let mutation = getUpdateEntityMutation(request)
-            console.log(mutation.filter)
-            await updateUsers({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-          } else if (command.commandName === CommandNames.UPDATE_MENTORS) {
-            let mutation = getUpdateEntityMutation(request)
-            console.log(mutation.filter)
-            await updateMentors({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-          } else if (command.commandName === CommandNames.UPDATE_PROJECTS) {
-            let mutation = getUpdateEntityMutation(request)
-            console.log(mutation.filter)
-            await updateProjects({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-          } else if (command.commandName === CommandNames.UPDATE_PROXIES) {
-            let mutation = getUpdateEntityMutation(request)
-            console.log(mutation.filter)
-            await updateProxies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-          } else if (command.commandName === CommandNames.UPDATE_REQUESTS) {
-            let mutation = getUpdateEntityMutation(request)
-            console.log(mutation.filter)
-            await updateRequests({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-          } else if (command.commandName === CommandNames.UPDATE_CURRENCIES) {
-            let mutation = getUpdateEntityMutation(request)
-            console.log(mutation.filter)
-            await updateCurrencies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+          switch (command.commandName) {
+            case CommandNames.GET_USERS: {
+              const query = getQuery<GraphQLUserFieldType>(request)
+              setQueryFieldsArr(query.fields)
+              await getUsers({variables: {input: query.filter}})
+              break;
+            }
+            case CommandNames.GET_CURRENCIES: {
+              const query = getQuery<GraphQLCurrencyFieldType>(request)
+              setQueryFieldsArr(query.fields)
+              await getCurrencies({variables: {input: query.filter}})
+              break;
+            }
+            case CommandNames.GET_MENTORS: {
+              const query = getQuery<GraphQLMentorFieldType>(request)
+              setQueryFieldsArr(query.fields)
+              await getMentors({variables: {input: query.filter}})
+              break;
+            }
+            case CommandNames.GET_PROJECTS: {
+              const query = getQuery<GraphQLProjectFieldType>(request)
+              setQueryFieldsArr(query.fields)
+              await getProjects({variables: {input: query.filter}})
+              break;
+            }
+            case CommandNames.GET_PROXIES: {
+              const query = getQuery<GraphQLProxyFieldType>(request)
+              setQueryFieldsArr(query.fields)
+              await getProxies({variables: {input: query.filter}})
+              break;
+            }
+            case CommandNames.GET_REQUESTS: {
+              const query = getQuery<GraphQLRequestFieldType>(request)
+              setQueryFieldsArr(query.fields)
+              await getRequests({variables: {input: query.filter}})
+              break;
+            }
+            case CommandNames.ADD_USER: {
+              const mutation = getAddEntityMutation<GraphQLUserFieldType>(request)
+              await addUser({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.ADD_CURRENCY: {
+              const mutation = getAddEntityMutation<GraphQLCurrencyFieldType>(request)
+              await addCurrency({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.ADD_MENTOR: {
+              const mutation = getAddEntityMutation<GraphQLMentorFieldType>(request)
+              await addMentor({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.ADD_PROJECT: {
+              const mutation = getAddEntityMutation<GraphQLProjectFieldType>(request)
+              await addProject({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.ADD_PROXY: {
+              const mutation = getAddEntityMutation<GraphQLProxyFieldType>(request)
+              await addProxy({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.ADD_REQUEST: {
+              const mutation = getAddEntityMutation<GraphQLRequestFieldType>(request)
+              await addRequest({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.DELETE_USERS: {
+              const mutation = getDeleteEntityMutation<GraphQLUserFieldType>(request)
+              await deleteUsers({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.DELETE_CURRENCIES: {
+              const mutation = getDeleteEntityMutation<GraphQLCurrencyFieldType>(request)
+              await deleteCurrencies({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.DELETE_MENTORS: {
+              const mutation = getDeleteEntityMutation<GraphQLMentorFieldType>(request)
+              await deleteMentors({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.DELETE_PROJECTS: {
+              const mutation = getDeleteEntityMutation<GraphQLProjectFieldType>(request)
+              await deleteProjects({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.DELETE_PROXIES: {
+              const mutation = getDeleteEntityMutation<GraphQLProxyFieldType>(request)
+              await deleteProxies({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.DELETE_REQUESTS: {
+              const mutation = getDeleteEntityMutation<GraphQLRequestFieldType>(request)
+              await deleteRequests({variables: {input: mutation.filter}})
+              break;
+            }
+            case CommandNames.UPDATE_USERS: {
+              let mutation = getUpdateEntityMutation<GraphQLUserFieldType>(request)
+              await updateUsers({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+              break;
+            }
+            case CommandNames.UPDATE_MENTORS: {
+              let mutation = getUpdateEntityMutation<GraphQLMentorFieldType>(request)
+              await updateMentors({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+              break;
+            }
+            case CommandNames.UPDATE_PROJECTS: {
+              let mutation = getUpdateEntityMutation<GraphQLProjectFieldType>(request)
+              await updateProjects({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+              break;
+            }
+            case CommandNames.UPDATE_PROXIES: {
+              let mutation = getUpdateEntityMutation<GraphQLProxyFieldType>(request)
+              await updateProxies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+              break;
+            }
+            case CommandNames.UPDATE_REQUESTS: {
+              let mutation = getUpdateEntityMutation<GraphQLRequestFieldType>(request)
+              await updateRequests({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+              break;
+            }
+            case CommandNames.UPDATE_CURRENCIES: {
+              let mutation = getUpdateEntityMutation<GraphQLCurrencyFieldType>(request)
+              await updateCurrencies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+              break;
+            }
           }
         }
       } else {

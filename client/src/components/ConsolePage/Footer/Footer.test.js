@@ -6,7 +6,7 @@ import {Footer} from "./Footer";
 import {it} from "@jest/globals";
 import {createGetUsersQuery} from "./graphqlQueries/getUsers.graphql";
 import '@testing-library/jest-dom'
-import {gql} from "@apollo/client";
+import {gql, useLazyQuery} from "@apollo/client";
 import {getQuery} from "../../../helpers/graphql/graphqlHelper";
 import {createGetProjectsQuery} from "./graphqlQueries/getProjects.graphql";
 import {render} from "@testing-library/react";
