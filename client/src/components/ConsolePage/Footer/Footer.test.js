@@ -4,16 +4,16 @@ import {MockedProvider} from "@apollo/client/testing";
 
 import {Footer} from "./Footer";
 import {it} from "@jest/globals";
-import {createGetUsersQuery} from "./getUsers";
+import {createGetUsersQuery} from "./getUsers.graphql";
 import '@testing-library/jest-dom'
 import {gql} from "@apollo/client";
 import {getQuery} from "../../../helpers/graphql/graphqlHelper";
-import {createGetProjectsQuery} from "./getProjects";
+import {createGetProjectsQuery} from "./getProjects.graphql";
 import {render} from "@testing-library/react";
-import {createGetCurrenciesQuery} from "./getCurrencies";
-import {createGetMentorsQuery} from "./getMentors";
-import {createGetProxiesQuery} from "./getProxies";
-import {createGetRequestsQuery} from "./getRequests";
+import {createGetCurrenciesQuery} from "./getCurrencies.graphql";
+import {createGetMentorsQuery} from "./getMentors.graphql";
+import {createGetProxiesQuery} from "./getProxies.graphql";
+import {createGetRequestsQuery} from "./getRequests.graphql";
 
 const mocks = []; // We'll fill this in next
 

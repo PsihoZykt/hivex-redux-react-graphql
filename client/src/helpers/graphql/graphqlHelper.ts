@@ -73,7 +73,6 @@ export const getGraphqlFieldsFromObj = (input: String[]): GraphqlAnyEntityFieldT
     bracketPosition.push(input[idx].indexOf("}"))
 
   })
-  // return fieldsArr.join(" ")
   return fieldsArr
 }
 export const getQueryObjFromQueryArr = <T extends GraphqlAnyEntityFieldType>(queryArr: Array<QueryType>): QueryGetUsersType<T> => {
