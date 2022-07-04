@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.8",
     "graphql": "^16.5.0",
+    "graphql-tag": "^2.12.6",
     "lodash": "^4.17.21",
     "node-sass": "^7.0.1",
     "normalize.css": "^8.0.1",

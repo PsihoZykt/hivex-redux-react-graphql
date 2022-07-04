@@ -9,7 +9,7 @@ import {
   DELETE_USERS,
   getUsersQuery,
   UPDATE_USERS,
-} from "components/ConsolePage/Footer/getUsers.graphql";
+} from "components/ConsolePage/Footer/graphqlQueries/getUsers.graphql";
 import {
   getAddEntityMutation,
   getDeleteEntityMutation,
@@ -24,35 +24,36 @@ import {
   DELETE_CURRENCIES,
   getCurrenciesQuery,
   UPDATE_CURRENCIES
-} from "components/ConsolePage/Footer/getCurrencies.graphql";
+} from "components/ConsolePage/Footer/graphqlQueries/getCurrencies.graphql";
 import {
   ADD_MENTOR,
   createGetMentorsQuery,
   DELETE_MENTORS,
   getMentorsQuery,
   UPDATE_MENTORS
-} from "components/ConsolePage/Footer/getMentors.graphql";
+} from "components/ConsolePage/Footer/graphqlQueries/getMentors.graphql";
 import {
   ADD_PROXY,
   createGetProxiesQuery,
   DELETE_PROXIES,
   getProxiesQuery,
   UPDATE_PROXIES
-} from "components/ConsolePage/Footer/getProxies.graphql";
+} from "components/ConsolePage/Footer/graphqlQueries/getProxies.graphql";
 import {
   ADD_REQUEST,
   createGetRequestsQuery,
   DELETE_REQUESTS,
   getRequestsQuery,
   UPDATE_REQUESTS
-} from "components/ConsolePage/Footer/getRequests.graphql";
+} from "components/ConsolePage/Footer/graphqlQueries/getRequests.graphql";
 import {
   ADD_PROJECT,
   createGetProjectsQuery,
   DELETE_PROJECTS,
   getProjectsQuery,
   UPDATE_PROJECTS
-} from "components/ConsolePage/Footer/getProjects.graphql";
+} from "components/ConsolePage/Footer/graphqlQueries/getProjects.graphql";
+
 import {GraphQLUserFieldType} from "types/EntityTypes/GraphQLUserFieldType";
 import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 import {GraphQLCurrencyFieldType} from "types/EntityTypes/GraphQLCurrencyFieldType";

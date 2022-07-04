@@ -1,6 +1,5 @@
 import {DocumentNode, gql} from "@apollo/client";
 import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
-import {GraphQLUserFieldType} from "types/EntityTypes/GraphQLUserFieldType";
 
 
 export const getUsersQuery =

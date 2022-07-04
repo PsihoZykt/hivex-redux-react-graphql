@@ -1,11 +1,11 @@
 import _ from "lodash";
-import {GraphQLUserFieldType} from "types/EntityTypes/GraphQLUserFieldType";
 import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 
 type QueryType = {
   field: String ,
   filter: String | null
 }
+// TODO: Change filter from object to something more appropriate
 type QueryGetUsersType<T extends GraphqlAnyEntityFieldType> = {
   fields: T[]
   filter: Object
@@ -15,27 +15,25 @@ export const getQuery = <T extends GraphqlAnyEntityFieldType>(input: String): Qu
   const values = getValues(input)
   let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
   let queryArr = getQueryArr(fieldsWithFilters)
-  return getQueryObjFromQueryArr(queryArr)
+  return getQueryObjFromQueryArr<T>(queryArr)
 }
 
-export const getAddEntityMutation = <T extends GraphqlAnyEntityFieldType>(request: String) => {
+export const getAddEntityMutation = <T extends GraphqlAnyEntityFieldType>(request: String):QueryGetUsersType<T> => {
   const values = getValues(request)
   let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
   let mutations = getQueryArr(fieldsWithFilters, "=")
-  let mutationObj: QueryGetUsersType<T> = getQueryObjFromQueryArr(mutations)
-  return mutationObj
+  return getQueryObjFromQueryArr<T>(mutations)
 
 }
-export const getDeleteEntityMutation = (request: String) => {
+export const getDeleteEntityMutation = <T extends GraphqlAnyEntityFieldType>(request: String):QueryGetUsersType<T> => {
   const values = getValues(request)
   let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
   let mutations = getQueryArr(fieldsWithFilters)
-  let mutationObj = getQueryObjFromQueryArr(mutations)
-  return mutationObj
+  return getQueryObjFromQueryArr<T>(mutations)
 
 }
-export let getUpdateEntityMutation = (request: String) => {
-  //update-users -values a -f 1 | b -f 2 -set a=123
+//TODO : Change return values,
+export let getUpdateEntityMutation = <T extends GraphqlAnyEntityFieldType>(request: String): {filter:  Object, set: Object } => {
   let valuesAndSet = getValues(request)
   let [values, set] = valuesAndSet.split("-set")
   let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
@@ -49,7 +47,7 @@ export let getUpdateEntityMutation = (request: String) => {
 }
 
 export const getFieldsWithFiltersFromValues = (values: String): String[] => {
-  return values.split("|").map((e: any) => e.trim())
+  return values.split("|").map((e: string) => e.trim())
 }
 export const getQueryArr = (fieldsWithFilters: String[], type = "-f"): Array<QueryType> => {
   let queryArr: Array<QueryType> = []
@@ -63,12 +61,12 @@ export const getQueryArr = (fieldsWithFilters: String[], type = "-f"): Array<Que
   })
   return queryArr
 }
-export const getGraphqlFieldsFromObj = (input: String[]): GraphqlAnyEntityFieldType[] => {
-  let fieldsArr: GraphQLUserFieldType[] = input as GraphQLUserFieldType[]
+export const getGraphqlFieldsFromObj = <T extends GraphqlAnyEntityFieldType>(input: String[]): T[] => {
+  let fieldsArr: T[] = input as T[]
   let bracketPosition = []
   input.forEach((e: String, idx: number) => {
     while (input[idx].includes('.')) {
-      fieldsArr.push(input[idx].replace(/\./, "{") + "}" as GraphQLUserFieldType)
+      fieldsArr.push(input[idx].replace(/\./, "{") + "}" as T)
     }
     bracketPosition.push(input[idx].indexOf("}"))
 
@@ -84,13 +82,12 @@ export const getQueryObjFromQueryArr = <T extends GraphqlAnyEntityFieldType>(que
       queryObj = _.set(queryObj, queryArr[idx].field as string, queryArr[idx].filter)
     }
   })
-  let fieldsGraphqlArr: any = getGraphqlFieldsFromObj(fieldsArr)
+  let fieldsGraphqlArr: T[] = getGraphqlFieldsFromObj<T>(fieldsArr)
   return {fields: fieldsGraphqlArr, filter: queryObj}
 
 }
 
 
 export const getValues = (request: String) => {
-  const values = request.split('-values')[1]
-  return values
+  return request.split('-values')[1]
 }
