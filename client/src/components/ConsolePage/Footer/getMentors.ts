@@ -1,4 +1,6 @@
 import {gql} from "@apollo/client";
+import {GraphQLMentorFieldType} from "types/EntityTypes/GraphQLMentorFieldType";
+import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 
 export const getMentorsQuery = gql`query GetMentors {
     getMentors {
@@ -12,15 +14,15 @@ export const getMentorsQuery = gql`query GetMentors {
         techStack
     }
 }`
-export const createGetMentorsQuery = ({body}: any) => {
+export const createGetMentorsQuery = <T extends GraphqlAnyEntityFieldType>(fields: T[]) => {
     try {
         return gql`query GetMentors($input: MentorFilter) {
             getMentors(input: $input) {
-                ${body}
+                ${fields}
             }
         }`
     } catch (e: any) {
-        console.log(e)
+        throw new Error(e)
     }
 
 }

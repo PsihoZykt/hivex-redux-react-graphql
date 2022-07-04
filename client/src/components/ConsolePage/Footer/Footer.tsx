@@ -8,11 +8,10 @@ import {
   createGetUsersQuery,
   DELETE_USERS,
   getUsersQuery,
-  UPDATE_USERS
+  UPDATE_USERS,
 } from "components/ConsolePage/Footer/getUsers";
 import {
   getAddEntityMutation,
-  getAddUserMutation,
   getDeleteEntityMutation,
   getQuery,
   getUpdateEntityMutation,
@@ -20,7 +19,8 @@ import {
 } from "helpers/graphql/graphqlHelper";
 import {getFormattedJSON} from "helpers/json/format";
 import {
-  ADD_CURRENCY, createGetCurrenciesQuery,
+  ADD_CURRENCY,
+  createGetCurrenciesQuery,
   DELETE_CURRENCIES,
   getCurrenciesQuery,
   UPDATE_CURRENCIES
@@ -40,24 +40,29 @@ import {
   UPDATE_PROXIES
 } from "components/ConsolePage/Footer/getProxies";
 import {
-  ADD_REQUEST, createGetRequestsQuery,
+  ADD_REQUEST,
+  createGetRequestsQuery,
   DELETE_REQUESTS,
   getRequestsQuery,
   UPDATE_REQUESTS
 } from "components/ConsolePage/Footer/getRequests";
 import {
-  ADD_PROJECT, createGetProjectsQuery,
+  ADD_PROJECT,
+  createGetProjectsQuery,
   DELETE_PROJECTS,
   getProjectsQuery,
   UPDATE_PROJECTS
 } from "components/ConsolePage/Footer/getProjects";
+import {GraphQLUserFieldType} from "types/EntityTypes/GraphQLUserFieldType";
+import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
+import {GraphQLCurrencyFieldType} from "types/EntityTypes/GraphQLCurrencyFieldType";
 
 type FooterProps = {
   request: String
   setResponse: Dispatch<string>
 }
 
-enum CommandNames {
+export enum CommandNames {
   GET_FIELDS = "get-fields",
   GET_USERS = "get-users",
   ADD_USER = "add-user",
@@ -91,7 +96,7 @@ enum CommandNames {
 
 }
 
-enum Fields {
+export enum Fields {
   USERS = 'users',
   CURRENCIES = "currencies",
   MENTORS = "mentors",
@@ -101,41 +106,43 @@ enum Fields {
 }
 
 
-type CommandType = {
+export type CommandType = {
   prefix: "hivex"
   commandName: CommandNames
   valuesKey: "-values"
 }
-const Footer = ({request, setResponse}: FooterProps) => {
+export const Footer = ({request, setResponse}: FooterProps) => {
 
-  const [queryObj, setQueryObj] = useState<{ body: String }>({body: "_id"})
-  const [testUsersData, userData] = useLazyQuery(createGetUsersQuery(queryObj), {
-    errorPolicy: "ignore", onCompleted: (data) => {
-      setResponse(JSON.stringify(data, null, "\t"))
-    }
-  })
-  const [getCurrencies, getCurrenciesData] = useLazyQuery(createGetCurrenciesQuery(queryObj), {
+  const [queryFieldsArr, setQueryFieldsArr] = useState<GraphqlAnyEntityFieldType[]>(["name"])
+  const [getUsers, getUsersData] = useLazyQuery(createGetUsersQuery(queryFieldsArr), {
     errorPolicy: "ignore", onCompleted: (data) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
   })
 
-  const [getMentors, getMentorsData] = useLazyQuery(createGetMentorsQuery(queryObj), {
+
+  const [getCurrencies, getCurrenciesData] = useLazyQuery(createGetCurrenciesQuery(queryFieldsArr), {
     errorPolicy: "ignore", onCompleted: (data) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
   })
-  const [getProjects, getProjectsData] = useLazyQuery(createGetProjectsQuery(queryObj), {
+
+  const [getMentors, getMentorsData] = useLazyQuery(createGetMentorsQuery(queryFieldsArr), {
     errorPolicy: "ignore", onCompleted: (data) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
   })
-  const [getProxies, getProxiesData] = useLazyQuery(createGetProxiesQuery(queryObj), {
+  const [getProjects, getProjectsData] = useLazyQuery(createGetProjectsQuery(queryFieldsArr), {
     errorPolicy: "ignore", onCompleted: (data) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
   })
-  const [getRequests, getRequestsData] = useLazyQuery(createGetRequestsQuery(queryObj), {
+  const [getProxies, getProxiesData] = useLazyQuery(createGetProxiesQuery(queryFieldsArr), {
+    errorPolicy: "ignore", onCompleted: (data) => {
+      setResponse(JSON.stringify(data, null, "\t"))
+    }
+  })
+  const [getRequests, getRequestsData] = useLazyQuery(createGetRequestsQuery(queryFieldsArr), {
     errorPolicy: "ignore", onCompleted: (data) => {
       setResponse(JSON.stringify(data, null, "\t"))
     }
@@ -255,142 +262,120 @@ const Footer = ({request, setResponse}: FooterProps) => {
     let command: CommandType = {
       prefix, commandName, valuesKey,
     }
-    if (command.prefix === "hivex") {
-      if (command.commandName === CommandNames.GET_FIELDS) {
-        const fields = getValues(request)
-        if (fields.includes(Fields.PROJECTS)) {
-          response += getFormattedJSON(JSON.stringify(projectsData.data)) + "\n"
+    try {
+      if (command.prefix === "hivex") {
+
+        if (command.commandName === CommandNames.GET_FIELDS) {
+          const fields = getValues(request)
+          if (fields.includes(Fields.PROJECTS)) {
+            response += getFormattedJSON(JSON.stringify(projectsData.data)) + "\n"
+          }
+          if (fields.includes(Fields.USERS)) {
+            response += getFormattedJSON(JSON.stringify(usersData.data))
+          }
+          if (fields.includes(Fields.CURRENCIES)) {
+            response += getFormattedJSON(JSON.stringify(currenciesData.data))
+          }
+          if (fields.includes(Fields.PROXIES)) {
+            response += getFormattedJSON(JSON.stringify(proxiesData.data))
+          }
+          if (fields.includes(Fields.REQUESTS)) {
+            response += getFormattedJSON(JSON.stringify(requestsData.data))
+          }
+          if (fields.includes(Fields.MENTORS)) {
+            response += getFormattedJSON(JSON.stringify(mentorsData.data))
+          }
+          setResponse(response)
+        } else if (command.valuesKey === "-values") {
+          if (command.commandName === CommandNames.GET_USERS) {
+            const query = getQuery<GraphQLUserFieldType>(request)
+            setQueryFieldsArr(query.fields)
+            await getUsers({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.GET_CURRENCIES) {
+            const query = getQuery<GraphQLCurrencyFieldType>(request)
+            setQueryFieldsArr(query.fields)
+            await getCurrencies({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.GET_MENTORS) {
+            const query = getQuery(request)
+
+            setQueryFieldsArr( query.fields)
+            await getMentors({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.GET_PROJECTS) {
+            const query = getQuery(request)
+            setQueryFieldsArr(query.fields)
+            await getProjects({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.GET_PROXIES) {
+            const query = getQuery(request)
+            setQueryFieldsArr(query.fields)
+            await getProxies({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.GET_REQUESTS) {
+            const query = getQuery(request)
+            setQueryFieldsArr( query.fields)
+            await getRequests({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.ADD_USER) {
+            const mutation = getAddEntityMutation(request)
+            await addUser({variables: {input: mutation.filter}})
+          } else if (command.commandName === CommandNames.ADD_CURRENCY) {
+            const mutation = getAddEntityMutation(request)
+            await addCurrency({variables: {input: mutation.filter}})
+          } else if (command.commandName === CommandNames.ADD_MENTOR) {
+            const mutation = getAddEntityMutation(request)
+            await addMentor({variables: {input: mutation.filter}})
+          } else if (command.commandName === CommandNames.ADD_PROJECT) {
+            const mutation = getAddEntityMutation(request)
+            await addProject({variables: {input: mutation.filter}})
+          } else if (command.commandName === CommandNames.ADD_PROXY) {
+            const mutation = getAddEntityMutation(request)
+            await addProxy({variables: {input: mutation.filter}})
+          } else if (command.commandName === CommandNames.ADD_REQUEST) {
+            const mutation = getAddEntityMutation(request)
+            await addRequest({variables: {input: mutation.filter}})
+          } else if (command.commandName === CommandNames.DELETE_USERS) {
+            const query = getDeleteEntityMutation(request)
+            await deleteUsers({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.DELETE_CURRENCIES) {
+            const query = getDeleteEntityMutation(request)
+            await deleteCurrencies({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.DELETE_MENTORS) {
+            const query = getDeleteEntityMutation(request)
+            await deleteMentors({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.DELETE_PROJECTS) {
+            const query = getDeleteEntityMutation(request)
+            await deleteProjects({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.DELETE_PROXIES) {
+            const query = getDeleteEntityMutation(request)
+            await deleteProxies({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.DELETE_REQUESTS) {
+            const query = getDeleteEntityMutation(request)
+            await deleteRequests({variables: {input: query.filter}})
+          } else if (command.commandName === CommandNames.UPDATE_USERS) {
+            let mutation = getUpdateEntityMutation(request)
+            console.log(mutation.filter)
+            await updateUsers({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+          } else if (command.commandName === CommandNames.UPDATE_MENTORS) {
+            let mutation = getUpdateEntityMutation(request)
+            console.log(mutation.filter)
+            await updateMentors({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+          } else if (command.commandName === CommandNames.UPDATE_PROJECTS) {
+            let mutation = getUpdateEntityMutation(request)
+            console.log(mutation.filter)
+            await updateProjects({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+          } else if (command.commandName === CommandNames.UPDATE_PROXIES) {
+            let mutation = getUpdateEntityMutation(request)
+            console.log(mutation.filter)
+            await updateProxies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+          } else if (command.commandName === CommandNames.UPDATE_REQUESTS) {
+            let mutation = getUpdateEntityMutation(request)
+            console.log(mutation.filter)
+            await updateRequests({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+          } else if (command.commandName === CommandNames.UPDATE_CURRENCIES) {
+            let mutation = getUpdateEntityMutation(request)
+            console.log(mutation.filter)
+            await updateCurrencies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
+          }
         }
-        if (fields.includes(Fields.USERS)) {
-          response += getFormattedJSON(JSON.stringify(usersData.data))
-        }
-        if (fields.includes(Fields.CURRENCIES)) {
-          response += getFormattedJSON(JSON.stringify(currenciesData.data))
-        }
-        if (fields.includes(Fields.PROXIES)) {
-          response += getFormattedJSON(JSON.stringify(proxiesData.data))
-        }
-        if (fields.includes(Fields.REQUESTS)) {
-          response += getFormattedJSON(JSON.stringify(requestsData.data))
-        }
-        if (fields.includes(Fields.MENTORS)) {
-          response += getFormattedJSON(JSON.stringify(mentorsData.data))
-        }
-        setResponse(response)
-      }
-      else if (command.valuesKey === "-values") {
-        if (command.commandName === CommandNames.GET_USERS) {
-          const query = getQuery(request)
-          console.log(query.filter)
-          setQueryObj({body: query.fields})
-          await testUsersData({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.GET_CURRENCIES) {
-          const query = getQuery(request)
-          setQueryObj({body: query.fields})
-          await getCurrencies({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.GET_MENTORS) {
-          const query = getQuery(request)
-          setQueryObj({body: query.fields})
-          await getMentors({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.GET_PROJECTS) {
-          const query = getQuery(request)
-          setQueryObj({body: query.fields})
-          await getProjects({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.GET_PROXIES) {
-          const query = getQuery(request)
-          setQueryObj({body: query.fields})
-          await getProxies({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.GET_REQUESTS) {
-          const query = getQuery(request)
-          setQueryObj({body: query.fields})
-          await getRequests({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.ADD_USER) {
-          const mutation = getAddEntityMutation(request)
-          await addUser({variables: {input: mutation.filter}})
-        }
-        else if (command.commandName === CommandNames.ADD_CURRENCY) {
-          const mutation = getAddEntityMutation(request)
-          await addCurrency({variables: {input: mutation.filter}})
-        }
-        else if (command.commandName === CommandNames.ADD_MENTOR) {
-          const mutation = getAddEntityMutation(request)
-          await addMentor({variables: {input: mutation.filter}})
-        }
-        else if (command.commandName === CommandNames.ADD_PROJECT) {
-          const mutation = getAddEntityMutation(request)
-          await addProject({variables: {input: mutation.filter}})
-        }
-        else if (command.commandName === CommandNames.ADD_PROXY) {
-          const mutation = getAddEntityMutation(request)
-          await addProxy({variables: {input: mutation.filter}})
-        }
-        else if (command.commandName === CommandNames.ADD_REQUEST) {
-          const mutation = getAddEntityMutation(request)
-          await addRequest({variables: {input: mutation.filter}})
-        }
-        else if (command.commandName === CommandNames.DELETE_USERS) {
-          const query = getDeleteEntityMutation(request)
-          await deleteUsers({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.DELETE_CURRENCIES) {
-          const query = getDeleteEntityMutation(request)
-          await deleteCurrencies({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.DELETE_MENTORS) {
-          const query = getDeleteEntityMutation(request)
-          await deleteMentors({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.DELETE_PROJECTS) {
-          const query = getDeleteEntityMutation(request)
-          await deleteProjects({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.DELETE_PROXIES) {
-          const query = getDeleteEntityMutation(request)
-          await deleteProxies({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.DELETE_REQUESTS) {
-          const query = getDeleteEntityMutation(request)
-          await deleteRequests({variables: {input: query.filter}})
-        }
-        else if (command.commandName === CommandNames.UPDATE_USERS) {
-          let mutation = getUpdateEntityMutation(request)
-          console.log(mutation.filter)
-          await updateUsers({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-        }
-        else if (command.commandName === CommandNames.UPDATE_MENTORS) {
-          let mutation = getUpdateEntityMutation(request)
-          console.log(mutation.filter)
-          await updateMentors({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-        }
-        else if (command.commandName === CommandNames.UPDATE_PROJECTS) {
-          let mutation = getUpdateEntityMutation(request)
-          console.log(mutation.filter)
-          await updateProjects({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-        }
-        else if (command.commandName === CommandNames.UPDATE_PROXIES) {
-          let mutation = getUpdateEntityMutation(request)
-          console.log(mutation.filter)
-          await updateProxies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-        }
-        else if (command.commandName === CommandNames.UPDATE_REQUESTS) {
-          let mutation = getUpdateEntityMutation(request)
-          console.log(mutation.filter)
-          await updateRequests({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-        }
-        else if (command.commandName === CommandNames.UPDATE_CURRENCIES) {
-          let mutation = getUpdateEntityMutation(request)
-          console.log(mutation.filter)
-          await updateCurrencies({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-        }
-      }
-    } else {
-      setResponse(`
+      } else {
+        setResponse(`
       Incorrect command: 
       command syntax: 
       [hivex commandName -values fieldOne -f? filterOne? | field2 -f? filterTwo?] (? means optional) 
@@ -400,6 +385,9 @@ const Footer = ({request, setResponse}: FooterProps) => {
       ${command.commandName === CommandNames.GET_USERS || command.commandName === CommandNames.GET_FIELDS ? "" : `Incorrect commandName. Supported commands are: ${CommandNames.GET_USERS}, ${CommandNames.GET_FIELDS}`}
       ${command.valuesKey === "-values" ? "" : "Write -values after commandName"}
       `)
+      }
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -421,6 +409,9 @@ const Footer = ({request, setResponse}: FooterProps) => {
       >
         <img src={format} alt="some rectangles with different width"/>
         Форматировать
+        {usersData.loading && <p>Loading...</p>}
+        {usersData.error && <p>Error!</p>}
+
       </div>
 
     </div>

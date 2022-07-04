@@ -1,4 +1,6 @@
 import {gql} from "@apollo/client";
+import {GraphQLProxyFieldType} from "types/EntityTypes/GraphQLProxyFieldType";
+import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 
 export const getProxiesQuery = gql`query GetUsers {
     getProxies {
@@ -14,15 +16,15 @@ export const getProxiesQuery = gql`query GetUsers {
         }
     }
 }`
-export const createGetProxiesQuery = ({body}: any) => {
+export const createGetProxiesQuery = <T extends GraphqlAnyEntityFieldType>(fields: T[]) => {
     try {
         return gql`query GetProxies($input: ProxyFilter) {
             getProxies(input: $input) {
-                ${body}
+                ${fields}
             }
         }`
     } catch (e: any) {
-        console.log(e)
+       throw new Error(e)
     }
 
 }

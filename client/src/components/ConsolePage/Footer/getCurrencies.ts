@@ -1,4 +1,6 @@
 import {gql} from "@apollo/client";
+import {GraphQLCurrencyFieldType} from "types/EntityTypes/GraphQLCurrencyFieldType";
+import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 
 export const getCurrenciesQuery = gql`query GetCurrencies {
     getCurrencies {
@@ -7,15 +9,15 @@ export const getCurrenciesQuery = gql`query GetCurrencies {
         code
     }
 }`
-export const createGetCurrenciesQuery = ({body}: any) => {
+export const createGetCurrenciesQuery = <T extends GraphqlAnyEntityFieldType>(fields: T[]) => {
     try {
         return gql`query GetCurrencies($input: CurrencyFilter) {
             getCurrencies(input: $input) {
-                ${body}
+                ${fields}
             }
         }`
     } catch (e: any) {
-        console.log(e)
+        throw new Error(e)
     }
 
 }

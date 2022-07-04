@@ -1,4 +1,6 @@
 import {gql} from "@apollo/client";
+import {GraphQLProjectFieldType} from "types/EntityTypes/GraphQLProjectFieldType";
+import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 
 export const getProjectsQuery = gql`query GetProjects {
   getProjects {
@@ -21,15 +23,15 @@ export const getProjectsQuery = gql`query GetProjects {
     techStack
   }
 }`
-export const createGetProjectsQuery = ({body}: any) => {
+export const createGetProjectsQuery = <T extends GraphqlAnyEntityFieldType>(fields: T[]) => {
     try {
         return gql`query GetProjects($input: ProjectFilter) {
             getProjects(input: $input) {
-                ${body}
+                ${fields}
             }
         }`
     } catch (e: any) {
-      console.log(e)
+      throw new Error(e)
     }
 
 }

@@ -1,27 +1,28 @@
 import _ from "lodash";
+import {GraphQLUserFieldType} from "types/EntityTypes/GraphQLUserFieldType";
+import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 
 type QueryType = {
-  field: String,
+  field: String ,
   filter: String | null
 }
-type QueryGetUsersType = {
-  fields: String,
+type QueryGetUsersType<T extends GraphqlAnyEntityFieldType> = {
+  fields: T[]
   filter: Object
 }
-export const getQuery = (input: String): QueryGetUsersType => {
+
+export const getQuery = <T extends GraphqlAnyEntityFieldType>(input: String): QueryGetUsersType<T> => {
   const values = getValues(input)
   let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
   let queryArr = getQueryArr(fieldsWithFilters)
-  let queryObj = getQueryObjFromQueryArr(queryArr)
-  return queryObj
+  return getQueryObjFromQueryArr(queryArr)
 }
 
-export const getAddEntityMutation = (request: String) => {
-
+export const getAddEntityMutation = <T extends GraphqlAnyEntityFieldType>(request: String) => {
   const values = getValues(request)
   let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
   let mutations = getQueryArr(fieldsWithFilters, "=")
-  let mutationObj: QueryGetUsersType = getQueryObjFromQueryArr(mutations)
+  let mutationObj: QueryGetUsersType<T> = getQueryObjFromQueryArr(mutations)
   return mutationObj
 
 }
@@ -54,27 +55,28 @@ export const getQueryArr = (fieldsWithFilters: String[], type = "-f"): Array<Que
   let queryArr: Array<QueryType> = []
   fieldsWithFilters.forEach((e: String) => {
     if (e.includes(type)) {
-      queryArr.push({field: e.split(type)[0].trim(), filter: e.split(type)[1].trim()})
+      queryArr.push({field: e.split(type)[0].trim() , filter: e.split(type)[1].trim()})
     } else {
-      queryArr.push({field: e, filter: null})
+      queryArr.push({field: e , filter: null})
 
     }
   })
   return queryArr
 }
-export const getGraphqlFieldsFromObj = (input: String[]) => {
-  let fieldsArr = input
+export const getGraphqlFieldsFromObj = (input: String[]): GraphqlAnyEntityFieldType[] => {
+  let fieldsArr: GraphQLUserFieldType[] = input as GraphQLUserFieldType[]
   let bracketPosition = []
-  fieldsArr.forEach((e: String, idx: number) => {
-    while (fieldsArr[idx].includes('.')) {
-      fieldsArr[idx] = fieldsArr[idx].replace(/\./, "{") + "}"
+  input.forEach((e: String, idx: number) => {
+    while (input[idx].includes('.')) {
+      fieldsArr.push(input[idx].replace(/\./, "{") + "}" as GraphQLUserFieldType)
     }
-    bracketPosition.push(fieldsArr[idx].indexOf("}"))
+    bracketPosition.push(input[idx].indexOf("}"))
 
   })
-  return fieldsArr.join(" ")
+  // return fieldsArr.join(" ")
+  return fieldsArr
 }
-export const getQueryObjFromQueryArr = (queryArr: Array<QueryType>): any => {
+export const getQueryObjFromQueryArr = <T extends GraphqlAnyEntityFieldType>(queryArr: Array<QueryType>): QueryGetUsersType<T> => {
   let fieldsArr: String[] = []
   let queryObj: any = {}
   queryArr.forEach((e: QueryType, idx: number) => {
@@ -83,8 +85,8 @@ export const getQueryObjFromQueryArr = (queryArr: Array<QueryType>): any => {
       queryObj = _.set(queryObj, queryArr[idx].field as string, queryArr[idx].filter)
     }
   })
-  let fieldsGraphqlString = getGraphqlFieldsFromObj(fieldsArr)
-  return {fields: fieldsGraphqlString, filter: queryObj}
+  let fieldsGraphqlArr: any = getGraphqlFieldsFromObj(fieldsArr)
+  return {fields: fieldsGraphqlArr, filter: queryObj}
 
 }
 

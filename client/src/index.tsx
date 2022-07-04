@@ -6,7 +6,7 @@ import {BrowserRouter} from "react-router-dom";
 import {onError} from "@apollo/client/link/error";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById('root') as HTMLElement  || document.createElement('div') // for testing purposes
 );
 const LOCALHOST_GRAPHQL_URI = 'http://localhost:8080/graphql'
 const HEROKU_GRAPHQL_URI =  "https://hivex-redux-graphql.herokuapp.com/graphql"
@@ -21,7 +21,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     );
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
-const client = new ApolloClient({
+export const client = new ApolloClient({
   uri: API_URI,
   cache: new InMemoryCache(),
   // link: from([errorLink]),

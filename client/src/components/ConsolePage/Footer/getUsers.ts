@@ -1,4 +1,7 @@
-import {gql} from "@apollo/client";
+import {DocumentNode, gql} from "@apollo/client";
+import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
+import {GraphQLUserFieldType} from "types/EntityTypes/GraphQLUserFieldType";
+
 
 export const getUsersQuery =
   gql`query GetUsers {
@@ -17,7 +20,11 @@ export const getUsersQuery =
                   code
               }
           }
-          salary
+          salary,
+          workDuration,
+          level,
+          techStack,
+          timeStamp,
           project {
               _id
               name
@@ -44,15 +51,15 @@ export const getUsersQuery =
             }
         }`
 
-export const createGetUsersQuery = ({body}: any) => {
+export const createGetUsersQuery = <T extends GraphqlAnyEntityFieldType>(fields: T[]): DocumentNode => {
     try {
         return gql`query GetUsers($input: UserFilter) {
             getUsers(input: $input) {
-                ${body}
+                ${fields}
             }
         }`
     } catch (e: any) {
-        console.log(e)
+        throw new Error(e)
     }
 
 }

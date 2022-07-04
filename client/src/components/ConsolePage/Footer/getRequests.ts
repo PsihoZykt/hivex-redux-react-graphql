@@ -1,4 +1,6 @@
 import {gql} from "@apollo/client";
+import {GraphQLRequestFieldType} from "types/EntityTypes/GraphQLRequestFieldType";
+import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 
 export const getRequestsQuery = gql`query GetRequests {
     getRequests {
@@ -8,15 +10,15 @@ export const getRequestsQuery = gql`query GetRequests {
         createdAt
     }
 }`
-export const createGetRequestsQuery = ({body}: any) => {
+export const createGetRequestsQuery = <T extends GraphqlAnyEntityFieldType>(fields: T[]) => {
     try {
         return gql`query GetRequests($input: RequestFilter) {
             getRequests(input: $input) {
-                ${body}
+                ${fields}
             }
         }`
     } catch (e: any) {
-        console.log(e)
+        throw  new Error(e)
     }
 
 }
