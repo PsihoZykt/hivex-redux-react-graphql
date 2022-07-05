@@ -1,6 +1,6 @@
-import {DocumentNode, gql} from "@apollo/client";
+import {DocumentNode} from "@apollo/client";
 import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
-
+import {gql} from 'graphql-tag'
 
 export const getUsersQuery =
   gql`query GetUsers {
@@ -63,7 +63,7 @@ export const createGetUsersQuery = <T extends GraphqlAnyEntityFieldType>(fields:
 
 }
 
-export const ADD_USER = gql`mutation GetUsers($input: UserInput) {
+export const ADD_USER = gql`mutation addUser($input: UserInput) {
     addUser(input: $input) {
         name, _id
     }

@@ -62,13 +62,16 @@ export const getQueryArr = (fieldsWithFilters: String[], type = "-f"): Array<Que
   return queryArr
 }
 export const getGraphqlFieldsFromObj = <T extends GraphqlAnyEntityFieldType>(input: String[]): T[] => {
-  let fieldsArr: T[] = input as T[]
+  let inputArr: String[] = [...input];
+  let fieldsArr: T[] = inputArr as T[]
   let bracketPosition = []
-  input.forEach((e: String, idx: number) => {
-    while (input[idx].includes('.')) {
-      fieldsArr.push(input[idx].replace(/\./, "{") + "}" as T)
+  inputArr.forEach((e: String, idx: number) => {
+    while (inputArr[idx].includes('.')) {
+      inputArr[idx] = inputArr[idx].replace(/\./, "{") + "}"
     }
-    bracketPosition.push(input[idx].indexOf("}"))
+    fieldsArr[idx] = inputArr[idx] as T
+
+    bracketPosition.push(inputArr[idx].indexOf("}"))
 
   })
   return fieldsArr
@@ -76,6 +79,7 @@ export const getGraphqlFieldsFromObj = <T extends GraphqlAnyEntityFieldType>(inp
 export const getQueryObjFromQueryArr = <T extends GraphqlAnyEntityFieldType>(queryArr: Array<QueryType>): QueryGetUsersType<T> => {
   let fieldsArr: String[] = []
   let queryObj: any = {}
+
   queryArr.forEach((e: QueryType, idx: number) => {
     fieldsArr.push(queryArr[idx].field)
     if (queryArr[idx].filter) {
