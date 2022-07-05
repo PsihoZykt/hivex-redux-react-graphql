@@ -19,7 +19,7 @@ import {GraphQLMentorFieldType} from "types/EntityTypes/GraphQLMentorFieldType";
 import {GraphQLProjectFieldType} from "types/EntityTypes/GraphQLProjectFieldType";
 import {GraphQLProxyFieldType} from "types/EntityTypes/GraphQLProxyFieldType";
 import {GraphQLRequestFieldType} from "types/EntityTypes/GraphQLRequestFieldType";
-import {useGraphQL} from "components/ConsolePage/Footer/getUsers";
+import {useGraphQL} from "components/ConsolePage/Footer/useGraphql";
 import {ApolloError} from "@apollo/client";
 
 type FooterProps = {

@@ -6,15 +6,14 @@ import {Footer} from "./Footer";
 import {expect, it} from "@jest/globals";
 import {createGetUsersQuery} from "./graphqlQueries/getUsers.graphql";
 import '@testing-library/jest-dom'
-import {gql, useQuery} from "@apollo/client";
+import {gql} from "@apollo/client";
 import {getQuery} from "../../../helpers/graphql/graphqlHelper";
 import {createGetProjectsQuery} from "./graphqlQueries/getProjects.graphql";
-import {act, render} from "@testing-library/react";
+import {render} from "@testing-library/react";
 import {createGetCurrenciesQuery} from "./graphqlQueries/getCurrencies.graphql";
 import {createGetMentorsQuery} from "./graphqlQueries/getMentors.graphql";
 import {createGetProxiesQuery} from "./graphqlQueries/getProxies.graphql";
 import {createGetRequestsQuery} from "./graphqlQueries/getRequests.graphql";
-import {useGetUsers} from "./getUsers";
 
 const mocks = []; // We'll fill this in next
 
