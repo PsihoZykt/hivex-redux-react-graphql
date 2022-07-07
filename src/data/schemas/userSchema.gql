@@ -60,7 +60,9 @@ type Query {
 
 
  type Mutation {
-    deleteUsers(input: UserFilter): [User]
-    updateUsers(input: UpdateUsersInput): [User]
-    addUser(input: UserInput): User
-}
+     deleteUsers(input: UserFilter): [User]
+     updateUsers(input: UpdateUsersInput): [User]
+     addUser(input: UserInput): User
+     signUp(username: String!, email: String!, password: String!): String!
+     signIn(username: String, email: String, password: String!): String!
+ }

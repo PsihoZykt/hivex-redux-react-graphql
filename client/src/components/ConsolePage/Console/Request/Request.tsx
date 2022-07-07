@@ -1,6 +1,7 @@
 import React, {Dispatch, MutableRefObject, useRef, useState} from 'react'
 import 'components/ConsolePage/Console/Request/Request.scss'
 import {DragElement} from 'common/DragElement/DragElement'
+import {validateRequest} from "components/ConsolePage/Console/Request/validateRequest";
 
 type RequestProps = {
   setRequest: Dispatch<string>
@@ -9,7 +10,7 @@ type RequestProps = {
 const Request = ({request, setRequest}: RequestProps) => {
   const resizeDrag = useRef<HTMLDivElement>(null) as MutableRefObject<HTMLDivElement>;
   const wrapperRef = useRef<HTMLDivElement>(null) as MutableRefObject<HTMLDivElement>;
-  const getErrorClass = (isError: boolean) => (isError ? 'error' : '')
+  const getErrorClass = () => (validateRequest(request) ? 'error' : '')
   const [consoleWidth, setConsoleWidth] = useState(400);
   let x: number
   let dx: number
@@ -40,11 +41,11 @@ const Request = ({request, setRequest}: RequestProps) => {
   }
   return (
     <div className={`request`}>
-      <div className={`request__header`}>Запрос</div>
+      <div className={`request__header  ${getErrorClass()}` }>Запрос</div>
 
       <div ref={wrapperRef} style={{width: consoleWidth + 'px'}} className={"textarea-wrapper"}>
     <textarea
-      className={`request__textarea`}
+      className={`request__textarea ${getErrorClass()}`}
       onChange={(e) => setRequest(e.target.value)}
     />
 

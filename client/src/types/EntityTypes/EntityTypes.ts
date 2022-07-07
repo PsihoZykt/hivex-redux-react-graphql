@@ -5,67 +5,69 @@ import {GraphQLProjectFieldType} from "types/EntityTypes/GraphQLProjectFieldType
 import {GraphQLProxyFieldType} from "types/EntityTypes/GraphQLProxyFieldType";
 import {GraphQLRequestFieldType} from "types/EntityTypes/GraphQLRequestFieldType";
 
-enum ProjectStatus {
+export enum ProjectStatus {
   OPEN = "open",
   ACTIVE = "active",
   CLOSED = "closed",
 }
 
-enum Level {
+export enum Level {
   JUNIOR = "junior",
   MIDDLE = "middle",
   SENIOR = "senior"
 }
-
-export type UserType = {
-  _id: String,
-  name: String,
-  salary: number,
-  workDuration: number,
-  level: Level,
-  techStack: String,
-  timeStamp: number,
+// TODO: походу эни придется убрать
+// Any placed with purpose! With strings it doesn't work correctly for some reasons
+// When I get Keys of Types and exclude object from these types, I can't use an array of union type with strings
+export interface UserType  {
+  _id: String | any,
+  name: String | any,
+  salary: number
+  workDuration: number
+  level: Level
+  techStack: String | any,
+  timeStamp: number
   project: ProjectType
   proxy: ProxyType
 }
 export type ProjectType = {
-  _id: String,
-  name: String,
-  country: String,
+  _id: String| any,
+  name: String| any,
+  country: String| any,
   duration: number,
   timestamp: number,
-  techStack: String,
+  techStack: String| any,
   status: ProjectStatus,
   mentor: MentorType
 }
 export type ProxyType = {
-  _id: String,
-  name: String,
-  country: String,
+  _id: String| any,
+  name: String| any,
+  country: String| any,
   timestamp: number,
-  bank: String,
+  bank: String| any,
   currency: CurrencyType
 }
 export type RequestType = {
-  _id: String,
-  request: String,
-  response: String,
-  createdAt: Date
+  _id: String| any,
+  request: String| any,
+  response: String| any,
+  createdAt: Date| any,
 }
 export type MentorType = {
-  _id: String,
-  name: String,
-  level: Level,
-  workDuration: number,
+  _id: String| any,
+  name: String| any,
+  level: Level
+  workDuration: number
   salary: number,
-  country: String,
+  country: String| any,
   timestamp: number,
-  techStack: String
+  techStack: String| any,
 }
 export type CurrencyType = {
-  _id: String,
-  name: String,
-  code: String
+  _id: String| any,
+  name: String| any,
+  code: String| any,
 }
 //Get a type which have a string, which comprises all  fields of Entity
 // Exclude object-keys

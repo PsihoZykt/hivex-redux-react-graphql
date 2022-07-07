@@ -20,7 +20,7 @@ import {GraphQLProjectFieldType} from "types/EntityTypes/GraphQLProjectFieldType
 import {GraphQLProxyFieldType} from "types/EntityTypes/GraphQLProxyFieldType";
 import {GraphQLRequestFieldType} from "types/EntityTypes/GraphQLRequestFieldType";
 import {useGraphQL} from "components/ConsolePage/Footer/useGraphql";
-import {ApolloError} from "@apollo/client";
+import {validateRequest} from "components/ConsolePage/Console/Request/validateRequest";
 
 type FooterProps = {
   request: String
@@ -45,7 +45,7 @@ export const Footer = ({request, setResponse}: FooterProps) => {
 
   entitiesData.forEach(entity => {
     if (entity.loading) setResponse("Loading...")
-    else if (entity.error) throw new ApolloError(entity.error)
+    else if (entity.error) return null
   })
 
 
@@ -55,181 +55,174 @@ export const Footer = ({request, setResponse}: FooterProps) => {
     let prefix = requestParts[0] as "hivex";
     let commandName = requestParts[1] as unknown as CommandNames
     let valuesKey = requestParts[2] as "-values"
+    let requestError = validateRequest(request)
     let command: CommandType = {
       prefix, commandName, valuesKey,
     }
     try {
-      if (command.prefix === "hivex") {
-        if (command.commandName === CommandNames.GET_FIELDS) {
-          const fields = getValues(request)
-          if (fields.includes(Fields.PROJECTS)) {
-            const getProjectFields = await graphql.getProjectFields.exec()
-            response += getFormattedJSON(JSON.stringify(getProjectFields.data)) + "\n"
-          }
-          if (fields.includes(Fields.USERS)) {
-            const getUserFields = await graphql.getUserFields.exec()
-            response += getFormattedJSON(JSON.stringify(getUserFields.data)) + "\n"
-          }
-          if (fields.includes(Fields.CURRENCIES)) {
-            const getCurrenciesFields = await graphql.getCurrencyFields.exec()
-            response += getFormattedJSON(JSON.stringify(getCurrenciesFields.data))
-          }
-          if (fields.includes(Fields.PROXIES)) {
-            const getProxiesFields = await graphql.getProxyFields.exec()
-            response += getFormattedJSON(JSON.stringify(getProxiesFields.data))
-          }
-          if (fields.includes(Fields.REQUESTS)) {
-            const getRequestFields = await graphql.getRequestFields.exec()
-            response += getFormattedJSON(JSON.stringify(getRequestFields.data))
-          }
-          if (fields.includes(Fields.MENTORS)) {
-            const getMentorFields = await graphql.getMentorFields.exec()
-            response += getFormattedJSON(JSON.stringify(getMentorFields.data))
-          }
-          await setResponse(response)
-        }
-        else if (command.valuesKey === "-values") {
+      if (!requestError) {
+        if (command.prefix === "hivex") {
+          if (command.commandName === CommandNames.GET_FIELDS) {
+            const fields = getValues(request)
+            if (fields?.includes(Fields.PROJECTS)) {
+              const getProjectFields = await graphql.getProjectFields.exec()
+              response += getFormattedJSON(JSON.stringify(getProjectFields.data)) + "\n"
+            }
+            if (fields?.includes(Fields.USERS)) {
+              const getUserFields = await graphql.getUserFields.exec()
+              response += getFormattedJSON(JSON.stringify(getUserFields.data)) + "\n"
+            }
+            if (fields?.includes(Fields.CURRENCIES)) {
+              const getCurrenciesFields = await graphql.getCurrencyFields.exec()
+              response += getFormattedJSON(JSON.stringify(getCurrenciesFields.data))
+            }
+            if (fields?.includes(Fields.PROXIES)) {
+              const getProxiesFields = await graphql.getProxyFields.exec()
+              response += getFormattedJSON(JSON.stringify(getProxiesFields.data))
+            }
+            if (fields?.includes(Fields.REQUESTS)) {
+              const getRequestFields = await graphql.getRequestFields.exec()
+              response += getFormattedJSON(JSON.stringify(getRequestFields.data))
+            }
+            if (fields?.includes(Fields.MENTORS)) {
+              const getMentorFields = await graphql.getMentorFields.exec()
+              response += getFormattedJSON(JSON.stringify(getMentorFields.data))
+            }
+            await setResponse(response)
+          } else if (command.valuesKey === "-values") {
 
-          switch (command.commandName) {
-            case CommandNames.GET_USERS: {
-              const query = getQuery<GraphQLUserFieldType>(request)
-              setQueryFieldsArr(query.fields)
-              await graphql.getUsers.exec({variables: {input: query.filter}})
-              break;
-            }
-            case CommandNames.GET_CURRENCIES: {
-              const query = getQuery<GraphQLCurrencyFieldType>(request)
-              setQueryFieldsArr(query.fields)
-              await graphql.getCurrencies.exec({variables: {input: query.filter}})
-              break;
-            }
-            case CommandNames.GET_MENTORS: {
-              const query = getQuery<GraphQLMentorFieldType>(request)
-              setQueryFieldsArr(query.fields)
-              await graphql.getMentors.exec({variables: {input: query.filter}})
-              break;
-            }
-            case CommandNames.GET_PROJECTS: {
-              const query = getQuery<GraphQLProjectFieldType>(request)
-              setQueryFieldsArr(query.fields)
-              await graphql.getProjects.exec({variables: {input: query.filter}})
-              break;
-            }
-            case CommandNames.GET_PROXIES: {
-              const query = getQuery<GraphQLProxyFieldType>(request)
-              setQueryFieldsArr(query.fields)
-              await graphql.getProxies.exec({variables: {input: query.filter}})
-              break;
-            }
-            case CommandNames.GET_REQUESTS: {
-              const query = getQuery<GraphQLRequestFieldType>(request)
-              setQueryFieldsArr(query.fields)
-              await graphql.getRequests.exec({variables: {input: query.filter}})
-              break;
-            }
-            case CommandNames.ADD_USER: {
-              const mutation = getAddEntityMutation<GraphQLUserFieldType>(request)
-              await graphql.addUser.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.ADD_CURRENCY: {
-              const mutation = getAddEntityMutation<GraphQLCurrencyFieldType>(request)
-              await graphql.addCurrency.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.ADD_MENTOR: {
-              const mutation = getAddEntityMutation<GraphQLMentorFieldType>(request)
-              await graphql.addMentor.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.ADD_PROJECT: {
-              const mutation = getAddEntityMutation<GraphQLProjectFieldType>(request)
-              await graphql.addProject.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.ADD_PROXY: {
-              const mutation = getAddEntityMutation<GraphQLProxyFieldType>(request)
-              await graphql.addProxy.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.ADD_REQUEST: {
-              const mutation = getAddEntityMutation<GraphQLRequestFieldType>(request)
-              await graphql.addRequest.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.DELETE_USERS: {
-              const mutation = getDeleteEntityMutation<GraphQLUserFieldType>(request)
-              await graphql.deleteUsers.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.DELETE_CURRENCIES: {
-              const mutation = getDeleteEntityMutation<GraphQLCurrencyFieldType>(request)
-              await graphql.deleteCurrencies.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.DELETE_MENTORS: {
-              const mutation = getDeleteEntityMutation<GraphQLMentorFieldType>(request)
-              await graphql.deleteMentors.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.DELETE_PROJECTS: {
-              const mutation = getDeleteEntityMutation<GraphQLProjectFieldType>(request)
-              await graphql.deleteProjects.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.DELETE_PROXIES: {
-              const mutation = getDeleteEntityMutation<GraphQLProxyFieldType>(request)
-              await graphql.deleteProxies.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.DELETE_REQUESTS: {
-              const mutation = getDeleteEntityMutation<GraphQLRequestFieldType>(request)
-              await graphql.deleteRequests.exec({variables: {input: mutation.filter}})
-              break;
-            }
-            case CommandNames.UPDATE_USERS: {
-              let mutation = getUpdateEntityMutation<GraphQLUserFieldType>(request)
-              await graphql.updateUsers.exec({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-              break;
-            }
-            case CommandNames.UPDATE_MENTORS: {
-              let mutation = getUpdateEntityMutation<GraphQLMentorFieldType>(request)
-              await graphql.updateMentors.exec({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-              break;
-            }
-            case CommandNames.UPDATE_PROJECTS: {
-              let mutation = getUpdateEntityMutation<GraphQLProjectFieldType>(request)
-              await graphql.updateProjects.exec({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-              break;
-            }
-            case CommandNames.UPDATE_PROXIES: {
-              let mutation = getUpdateEntityMutation<GraphQLProxyFieldType>(request)
-              await graphql.updateProxies.exec({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-              break;
-            }
-            case CommandNames.UPDATE_REQUESTS: {
-              let mutation = getUpdateEntityMutation<GraphQLRequestFieldType>(request)
-              await graphql.updateRequests.exec({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-              break;
-            }
-            case CommandNames.UPDATE_CURRENCIES: {
-              let mutation = getUpdateEntityMutation<GraphQLCurrencyFieldType>(request)
-              await graphql.updateCurrencies.exec({variables: {input: {filter: mutation.filter, set: mutation.set}}})
-              break;
+            switch (command.commandName) {
+              case CommandNames.GET_USERS: {
+                const query = getQuery<GraphQLUserFieldType>(request)
+                setQueryFieldsArr(query!.fields)
+                await graphql.getUsers.exec({variables: {input: query?.filter}})
+                break;
+              }
+              case CommandNames.GET_CURRENCIES: {
+                const query = getQuery<GraphQLCurrencyFieldType>(request)
+                setQueryFieldsArr(query!.fields)
+                await graphql.getCurrencies.exec({variables: {input: query?.filter}})
+                break;
+              }
+              case CommandNames.GET_MENTORS: {
+                const query = getQuery<GraphQLMentorFieldType>(request)
+                setQueryFieldsArr(query!.fields)
+                await graphql.getMentors.exec({variables: {input: query?.filter}})
+                break;
+              }
+              case CommandNames.GET_PROJECTS: {
+                const query = getQuery<GraphQLProjectFieldType>(request)
+                setQueryFieldsArr(query!.fields)
+                await graphql.getProjects.exec({variables: {input: query?.filter}})
+                break;
+              }
+              case CommandNames.GET_PROXIES: {
+                const query = getQuery<GraphQLProxyFieldType>(request)
+                setQueryFieldsArr(query!.fields)
+                await graphql.getProxies.exec({variables: {input: query?.filter}})
+                break;
+              }
+              case CommandNames.GET_REQUESTS: {
+                const query = getQuery<GraphQLRequestFieldType>(request)
+                setQueryFieldsArr(query!.fields)
+                await graphql.getRequests.exec({variables: {input: query?.filter}})
+                break;
+              }
+              case CommandNames.ADD_USER: {
+                const mutation = getAddEntityMutation<GraphQLUserFieldType>(request)
+                await graphql.addUser.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.ADD_CURRENCY: {
+                const mutation = getAddEntityMutation<GraphQLCurrencyFieldType>(request)
+                await graphql.addCurrency.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.ADD_MENTOR: {
+                const mutation = getAddEntityMutation<GraphQLMentorFieldType>(request)
+                await graphql.addMentor.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.ADD_PROJECT: {
+                const mutation = getAddEntityMutation<GraphQLProjectFieldType>(request)
+                await graphql.addProject.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.ADD_PROXY: {
+                const mutation = getAddEntityMutation<GraphQLProxyFieldType>(request)
+                await graphql.addProxy.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.ADD_REQUEST: {
+                const mutation = getAddEntityMutation<GraphQLRequestFieldType>(request)
+                await graphql.addRequest.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.DELETE_USERS: {
+                const mutation = getDeleteEntityMutation<GraphQLUserFieldType>(request)
+                await graphql.deleteUsers.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.DELETE_CURRENCIES: {
+                const mutation = getDeleteEntityMutation<GraphQLCurrencyFieldType>(request)
+                await graphql.deleteCurrencies.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.DELETE_MENTORS: {
+                const mutation = getDeleteEntityMutation<GraphQLMentorFieldType>(request)
+                await graphql.deleteMentors.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.DELETE_PROJECTS: {
+                const mutation = getDeleteEntityMutation<GraphQLProjectFieldType>(request)
+                await graphql.deleteProjects.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.DELETE_PROXIES: {
+                const mutation = getDeleteEntityMutation<GraphQLProxyFieldType>(request)
+                await graphql.deleteProxies.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.DELETE_REQUESTS: {
+                const mutation = getDeleteEntityMutation<GraphQLRequestFieldType>(request)
+                await graphql.deleteRequests.exec({variables: {input: mutation?.filter}})
+                break;
+              }
+              case CommandNames.UPDATE_USERS: {
+                let mutation = getUpdateEntityMutation<GraphQLUserFieldType>(request)
+                await graphql.updateUsers.exec({variables: {input: {filter: mutation?.filter, set: mutation?.set}}})
+                break;
+              }
+              case CommandNames.UPDATE_MENTORS: {
+                let mutation = getUpdateEntityMutation<GraphQLMentorFieldType>(request)
+                await graphql.updateMentors.exec({variables: {input: {filter: mutation?.filter, set: mutation?.set}}})
+                break;
+              }
+              case CommandNames.UPDATE_PROJECTS: {
+                let mutation = getUpdateEntityMutation<GraphQLProjectFieldType>(request)
+                await graphql.updateProjects.exec({variables: {input: {filter: mutation?.filter, set: mutation?.set}}})
+                break;
+              }
+              case CommandNames.UPDATE_PROXIES: {
+                let mutation = getUpdateEntityMutation<GraphQLProxyFieldType>(request)
+                await graphql.updateProxies.exec({variables: {input: {filter: mutation?.filter, set: mutation?.set}}})
+                break;
+              }
+              case CommandNames.UPDATE_REQUESTS: {
+                let mutation = getUpdateEntityMutation<GraphQLRequestFieldType>(request)
+                await graphql.updateRequests.exec({variables: {input: {filter: mutation?.filter, set: mutation?.set}}})
+                break;
+              }
+              case CommandNames.UPDATE_CURRENCIES: {
+                let mutation = getUpdateEntityMutation<GraphQLCurrencyFieldType>(request)
+                await graphql.updateCurrencies.exec({variables: {input: {filter: mutation?.filter, set: mutation?.set}}})
+                break;
+              }
             }
           }
         }
       } else {
-        setResponse(`
-      Incorrect command: 
-      command syntax: 
-      [hivex commandName -values fieldOne -f? filterOne? | field2 -f? filterTwo?] (? means optional) 
-      your command:
-      ${request}
-      ${command.prefix === "hivex" ? "" : "command should start with hivex"}
-      ${command.commandName === CommandNames.GET_USERS || command.commandName === CommandNames.GET_FIELDS ? "" : `Incorrect commandName. Supported commands are: ${CommandNames.GET_USERS}, ${CommandNames.GET_FIELDS}`}
-      ${command.valuesKey === "-values" ? "" : "Write -values after commandName"}
-      `)
+        setResponse(requestError)
       }
     } catch (e) {
       console.log(e)

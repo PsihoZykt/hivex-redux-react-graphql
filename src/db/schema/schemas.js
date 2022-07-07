@@ -122,3 +122,8 @@ export const mentorSchema = new mongoose.Schema({
         type: String
     }
 })
+
+export const authSchema = new mongoose.Schema({
+    email: {type: String, required: true, unique: true},
+    password: {type: String, required: true},
+})

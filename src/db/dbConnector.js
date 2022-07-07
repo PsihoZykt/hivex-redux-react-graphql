@@ -1,4 +1,12 @@
-import {currencySchema, mentorSchema, projectSchema, proxySchema, requestSchema, userSchema} from "./schema/schemas.js";
+import {
+    authSchema,
+    currencySchema,
+    mentorSchema,
+    projectSchema,
+    proxySchema,
+    requestSchema,
+    userSchema
+} from "./schema/schemas.js";
 import mongoose from "mongoose";
 import {environment} from "../config/config.js";
 
@@ -23,5 +31,5 @@ const Mentors = mongoose.model('Mentors', mentorSchema)
 const Proxies = mongoose.model("Proxies", proxySchema)
 const Currencies = mongoose.model("Currencies", currencySchema)
 const Requests = mongoose.model("Requests", requestSchema)
-
-export {Users, Projects, Mentors, Proxies, Currencies, Requests};
+const Auth = mongoose.model("Auth", authSchema)
+export {Users, Projects, Mentors, Proxies, Currencies, Requests, Auth};

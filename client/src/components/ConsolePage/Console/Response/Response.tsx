@@ -7,6 +7,7 @@ type ResponseProps = {
   response: String
 }
 const Response = ({response}: ResponseProps) => {
+
   return (
     <div className={'response'}>
       <div className={`response__header`}>

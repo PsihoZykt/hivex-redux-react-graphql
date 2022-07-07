@@ -39,7 +39,7 @@ import {
 
 export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
   const queryOptions: MutationHookOptions = {
-    errorPolicy: "ignore", onCompleted: (data: any) => {
+    errorPolicy: "all", onCompleted: (data: any) => {
       onCompleted(JSON.stringify(data, null, "\t"))
     }
   }
