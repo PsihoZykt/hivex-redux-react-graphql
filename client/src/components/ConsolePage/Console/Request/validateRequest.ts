@@ -35,14 +35,14 @@ export const validateRequest = (request: String) => {
     error += "Write -values after command name \n"
   }
   let query: any
-  if (command.commandName.includes("add")) {
+  if (command.commandName?.includes("add")) {
     query = getAddEntityMutation(request)
-  } else if (command.commandName.includes("update")) {
+  } else if (command.commandName?.includes("update")) {
     query = getUpdateEntityMutation(request)
-  } else if (command.commandName.includes("delete")) {
+  } else if (command.commandName?.includes("delete")) {
     query = getDeleteEntityMutation(request)
-  } else if (command.commandName.includes(("get"))) {
-    const query = getQuery(request)
+  } else if (command.commandName?.includes(("get"))) {
+     query = getQuery(request)
   }
   if (!query?.fields) {
     error += "Write some fields after -values \n"
