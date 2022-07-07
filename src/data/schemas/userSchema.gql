@@ -7,6 +7,8 @@ scalar ID
 
 type User {
     _id: ID,
+    password: String!
+    email: String!
     name: String,
     proxy: Proxy,
     salary: Int,
@@ -19,6 +21,8 @@ type User {
 
 input UserInput {
     _id: ID,
+    password: String!
+    email: String!
     name: String,
     proxy: ProxyInput,
     salary: Int,
@@ -30,6 +34,7 @@ input UserInput {
 }
 input UserFilter {
     _id: ID,
+    email: String!
     name: String
     proxy: ProxyFilter,
     salary: Int,
@@ -41,6 +46,7 @@ input UserFilter {
 }
 input UserSetFilter {
     name: String
+    email: String!
     proxy: ProxyFilter,
     salary: Int,
     workDuration: Int,
@@ -53,7 +59,10 @@ input UpdateUsersInput {
     filter: UserFilter!
     set: UserSetFilter
 }
-
+input AuthInput {
+    email: String!
+    password: String!
+}
 type Query {
     getUsers(input: UserFilter): [User]
 }
@@ -63,6 +72,6 @@ type Query {
      deleteUsers(input: UserFilter): [User]
      updateUsers(input: UpdateUsersInput): [User]
      addUser(input: UserInput): User
-     signUp(username: String!, email: String!, password: String!): String!
-     signIn(username: String, email: String, password: String!): String!
+     signUp(input: AuthInput!): String!
+     signIn(input: AuthInput!): String!
  }

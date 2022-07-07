@@ -1,40 +1,43 @@
-import {Currencies, Users} from "../../db/dbConnector.js";
-import {getFilteredEntity} from "../../helpers/FilterParsing.js";
-import {
-    mongoDBAddEntityResolver,
-    mongoDBDeleteEntitiesResolver,
-    mongoDBUpdateEntitiesResolver
-} from "../resolvers.graphql.js";
+import {Users} from "../../db/dbConnector.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const authResolvers = {
-    Query: {
-        getCurrencies: async (root, {input}) => {
-            let currencies = await Currencies.find().lean()
-            return getFilteredEntity(currencies, input)
-        },
-
-    },
     Mutation: {
+        signIn: async (root, {input}) => {
+            let {email, password} = input
+            if (email) {
+                email = email.trim().toLowerCase();
+            }
+            const user = await Users.findOne({email: email});
+            // if there is no user, throw an authentication error
+            if (!user) {
+                throw new Error('Error signing in');
+            }    // if the passwords don't match, throw an authentication error
+            const valid = await bcrypt.compare(password, user.password);
 
+            if (!valid) {
+                console.log("Invalid password")
+                throw new Error('Error signing in');
+            }    // create and return the json web token
+            return jwt.sign({id: user._id}, "123", null, null);
 
-        login: async (root, {input}) => {
+        },
+        signUp: async (root, {input}) => {
+            // normalize email address
+            let {email, password} = input
+            email = email.trim().toLowerCase();    // hash the password
+            const hashed = await bcrypt.hash(password, 10);
+            let user = await new Users({email: email, password: hashed})
             try {
-                const {email, password} = req.body
-                const candidate = await Users.findOne(input.email)
-                if (candidate) {
-                  return candidate
-                }
-                const hashedPassword = await bcrypt.hash(password, 12)
-                const user = new User({email, password: hashedPassword})
-                await user.save();
-                res.status(201).json({message: 'User created'})
-            } catch (e) {
-                res.status(500).json({message: "Somethings goes wrong"})
+                await user.save()
+                return jwt.sign({id: user._id}, "123", null, null);
+
+            } catch (err) {
+                console.log(err)
+                throw new Error("Error creating account")
             }
 
-        },
-        signup: async (root, {input}) => {
-            return await mongoDBDeleteEntitiesResolver(Currencies, root, input)
         },
 
 

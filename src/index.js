@@ -14,6 +14,9 @@ import {mentorResolvers} from "./data/resolvers/mentorResolvers.js";
 import {projectResolvers} from "./data/resolvers/projectResolvers.js";
 import {proxyResolvers} from "./data/resolvers/proxyResolvers.js";
 import {requestResolvers} from "./data/resolvers/requestResolvers.js";
+import {authResolvers} from "./data/resolvers/authResolvers.js";
+import jwt from "jsonwebtoken";
+import {Users} from "./db/dbConnector.js";
 
 
 export const __filename = fileURLToPath(import.meta.url);
@@ -25,15 +28,28 @@ const schema = await loadSchema(path.join(__dirname, "./data/schemas", "*.gql"),
     // load files and merge them into a single schema object
     loaders: [new GraphQLFileLoader()]
 })
-const resolvers = _.merge(userResolvers, currencyResolvers, mentorResolvers, projectResolvers, proxyResolvers, requestResolvers )
+const resolvers = _.merge(userResolvers, currencyResolvers, mentorResolvers, projectResolvers, proxyResolvers, requestResolvers, authResolvers)
+// get the user info from a JWT
+const getUser = token => {
+    if (token) {
+        try {
+            // return the user information from the token
+            return jwt.verify(token, "123", null, null);
+        } catch (err) {
+            // if there's a problem with the token, throw an error
+            throw new Error('Session invalid');
+        }
+    }
+};
 const schemaWithResolvers = addResolversToSchema({
     schema,
     resolvers,
+
 });
 const server = new ApolloServer({
-    schema: schemaWithResolvers
-    // csrfPrevention: true,
-    // cache: 'bounded',
+    schema: schemaWithResolvers,
+    csrfPrevention: true,
+    cache: 'bounded',
 });
 
 /**
