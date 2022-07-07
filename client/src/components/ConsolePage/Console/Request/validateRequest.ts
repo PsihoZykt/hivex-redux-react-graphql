@@ -1,5 +1,10 @@
 import {CommandNames, CommandType} from "components/ConsolePage/Footer/Commands/CommandTypes";
-import {getQuery} from "helpers/graphql/graphqlHelper";
+import {
+  getAddEntityMutation,
+  getDeleteEntityMutation,
+  getQuery,
+  getUpdateEntityMutation
+} from "helpers/graphql/graphqlHelper";
 import {GraphQLUserFieldType} from "types/EntityTypes/GraphQLUserFieldType";
 import {GraphQLCurrencyFieldType} from "types/EntityTypes/GraphQLCurrencyFieldType";
 import {GraphQLProjectFieldType} from "types/EntityTypes/GraphQLProjectFieldType";
@@ -29,7 +34,16 @@ export const validateRequest = (request: String) => {
   if (command.valuesKey !== "-values") {
     error += "Write -values after command name \n"
   }
-  const query = getQuery(request)
+  let query: any
+  if (command.commandName.includes("add")) {
+    query = getAddEntityMutation(request)
+  } else if (command.commandName.includes("update")) {
+    query = getUpdateEntityMutation(request)
+  } else if (command.commandName.includes("delete")) {
+    query = getDeleteEntityMutation(request)
+  } else if (command.commandName.includes(("get"))) {
+    const query = getQuery(request)
+  }
   if (!query?.fields) {
     error += "Write some fields after -values \n"
   }
@@ -65,30 +79,30 @@ export const validateRequest = (request: String) => {
   commandNames.forEach(e => {
     if (command.commandName === e) {
       if (command.commandName.includes("user") || command.commandName.includes("users")) {
-        query?.fields.forEach(field => {
+        query?.fields.forEach((field:any) => {
           if (!userFields.includes(field as GraphQLUserFieldType)) error += `User entity doesn't support ${field} field`
         })
 
       } else if (command.commandName.includes("currency") || command.commandName.includes("currencies")) {
-        query?.fields.forEach(field => {
+        query?.fields.forEach((field:any) => {
           if (!currencyFields.includes(field as GraphQLCurrencyFieldType)) error += `Currency entity doesn't support ${field} field`
         })
 
       } else if (command.commandName.includes("mentor")) {
-        query?.fields.forEach(field => {
+        query?.fields.forEach((field:any)=> {
           if (!mentorFields.includes(field as GraphQLMentorFieldType)) error += `Mentor entity doesn't support ${field} field`
         })
       } else if (command.commandName.includes("project")) {
-        query?.fields.forEach(field => {
+        query?.fields.forEach((field:any) => {
           if (!projectFields.includes(field as GraphQLProjectFieldType)) error += `Project entity doesn't support ${field} field`
         })
 
       } else if (command.commandName.includes("proxy") || command.commandName.includes("proxies")) {
-        query?.fields.forEach(field => {
+        query?.fields.forEach((field:any) => {
           if (!proxyFields.includes(field as GraphQLProxyFieldType)) error += `Proxy entity doesn't support ${field} field`
         })
       } else if (command.commandName.includes("request")) {
-        query?.fields.forEach(field => {
+        query?.fields.forEach((field:any) => {
           if (!requestFields.includes(field as GraphQLRequestFieldType)) error += `Request entity doesn't support ${field} field`
         })
       }
