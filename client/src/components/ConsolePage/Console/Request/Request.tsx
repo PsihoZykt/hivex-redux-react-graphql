@@ -1,7 +1,7 @@
 import React, {Dispatch, MutableRefObject, useRef, useState} from 'react'
 import 'components/ConsolePage/Console/Request/Request.scss'
 import {DragElement} from 'common/DragElement/DragElement'
-import {validateRequest} from "components/ConsolePage/Console/Request/validateRequest";
+import {validateRequest} from "helpers/graphql/validateRequest";
 
 type RequestProps = {
   setRequest: Dispatch<string>

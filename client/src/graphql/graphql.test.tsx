@@ -2,26 +2,16 @@ import {useLazyQuery, useMutation} from "@apollo/client";
 import {renderHook} from "@testing-library/react-hooks";
 import {MockedProvider} from "@apollo/client/testing";
 import {ADD_USER, createGetUsersQuery} from "./graphqlQueries/getUsers.graphql";
-import {getAddEntityMutation, getQuery, getUpdateEntityMutation} from "../../../helpers/graphql/graphqlHelper";
 import React from "react";
-import {
-    ADD_CURRENCY,
-    createGetCurrenciesQuery, UPDATE_CURRENCIES
-} from "components/ConsolePage/Footer/graphqlQueries/getCurrencies.graphql";
-import {
-    ADD_MENTOR,
-    createGetMentorsQuery,
-    UPDATE_MENTORS
-} from "components/ConsolePage/Footer/graphqlQueries/getMentors.graphql";
-import {
-    ADD_PROJECT,
-    createGetProjectsQuery,
-    UPDATE_PROJECTS
-} from "components/ConsolePage/Footer/graphqlQueries/getProjects.graphql";
-import {ProxyType, RequestType} from "types/EntityTypes/EntityTypes";
-import {ADD_REQUEST, createGetRequestsQuery} from "components/ConsolePage/Footer/graphqlQueries/getRequests.graphql";
-import {ADD_PROXY, createGetProxiesQuery} from "components/ConsolePage/Footer/graphqlQueries/getProxies.graphql";
+
 import {act} from "react-dom/test-utils";
+import {getAddEntityMutation, getQuery, getUpdateEntityMutation} from "helpers/graphql/graphqlHelper";
+import {ADD_MENTOR, createGetMentorsQuery, UPDATE_MENTORS} from "graphql/graphqlQueries/getMentors.graphql";
+import {ADD_PROJECT, createGetProjectsQuery, UPDATE_PROJECTS} from "graphql/graphqlQueries/getProjects.graphql";
+import {ADD_CURRENCY, createGetCurrenciesQuery, UPDATE_CURRENCIES} from "graphql/graphqlQueries/getCurrencies.graphql";
+import {ADD_PROXY, createGetProxiesQuery} from "graphql/graphqlQueries/getProxies.graphql";
+import {ADD_REQUEST, createGetRequestsQuery} from "graphql/graphqlQueries/getRequests.graphql";
+import {ProxyType, RequestType} from "types/EntityTypes/EntityTypes";
 
 let createRenderHookOptions = (mocks: any) => ({
     wrapper: ({children}: any) => {
@@ -33,7 +23,7 @@ let createRenderHookOptions = (mocks: any) => ({
 describe('request input should create appropriate query object, get-entities query should return appropriate result', () => {
     it('get-users query', async () => {
         const input = "hivex get-users -values name |  project.name  | project.mentor.name"
-        const query = createGetUsersQuery(getQuery(input).fields)
+        const query = createGetUsersQuery(getQuery(input)!.fields)
         const mocks = [
             {
                 request: {query},
@@ -64,13 +54,13 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getAddEntityMutation(input)
         const ADD_USER_RESULT = {
             addUser: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter
+                ...mutation!.filter
             }
         };
 
@@ -105,13 +95,13 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getAddEntityMutation(input)
         const ADD_MENTOR_RESULT = {
             addMentor: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter
+                ...mutation!.filter
             }
         };
 
@@ -146,13 +136,13 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getAddEntityMutation(input)
         const ADD_PROJECT_RESULT = {
             addProject: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter
+                ...mutation!.filter
             }
         };
 
@@ -187,13 +177,13 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getAddEntityMutation(input)
         const ADD_CURRENCY_RESULT = {
             addCurrency: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter
+                ...mutation!.filter
             }
         };
 
@@ -228,13 +218,13 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getAddEntityMutation(input)
         const ADD_PROXY_RESULT = {
             addProxy: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter
+                ...mutation!.filter
             }
         };
 
@@ -269,14 +259,14 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getAddEntityMutation(input)
         const ADD_REQUEST_RESULT = {
             addRequest: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 createdAt: new Date(),
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter,
+                ...mutation!.filter,
             }
         };
 
@@ -312,13 +302,13 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getUpdateEntityMutation(input)
         const UPDATE_CURRENCIES_RESULT = {
             updateCurrencies: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter
+                ...mutation!.filter
             }
         };
 
@@ -353,13 +343,13 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getUpdateEntityMutation(input)
         const UPDATE_MENTORS_RESULT = {
             updateMentors: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter
+                ...mutation!.filter
             }
         };
 
@@ -394,13 +384,13 @@ describe('request input should create appropriate query object, get-entities que
         const mutation = getUpdateEntityMutation(input)
         const UPDATE_PROJECTS_RESULT = {
             updateProjects: {
-                ...mutation.filter,
+                ...mutation!.filter,
                 _id: "11"
             }
         };
         const variables = {
             input: {
-                ...mutation.filter
+                ...mutation!.filter
             }
         };
 
@@ -435,7 +425,7 @@ describe('request input should create appropriate query object, get-entities que
 
     it('get-currencies query', async () => {
         const input = "hivex get-currencies -values _id | name | code"
-        const query = createGetCurrenciesQuery(getQuery(input).fields)
+        const query = createGetCurrenciesQuery(getQuery(input)!.fields)
         const mocks = [
             {
                 request: {query},
@@ -459,7 +449,7 @@ describe('request input should create appropriate query object, get-entities que
     });
     it('get-mentors query', async () => {
         const input = "hivex get-currencies -values _id | name | level"
-        const query = createGetMentorsQuery(getQuery(input).fields)
+        const query = createGetMentorsQuery(getQuery(input)!.fields)
         const mocks = [
             {
                 request: {query},
@@ -483,7 +473,7 @@ describe('request input should create appropriate query object, get-entities que
     });
     it('get-projects query', async () => {
         const input = "hivex get-projects -values _id | name | projectStatus | mentor.name"
-        const query = createGetProjectsQuery(getQuery(input).fields)
+        const query = createGetProjectsQuery(getQuery(input)!.fields)
         const mocks = [
             {
                 request: {query},
@@ -515,7 +505,7 @@ describe('request input should create appropriate query object, get-entities que
     it('get-requests query', async () => {
         const input = "hivex get-requests -values _id | request | response | createdAt"
         const Entity: RequestType = {_id: "5", request: "5", response: "5", createdAt: new Date()}
-        const query = createGetRequestsQuery(getQuery(input).fields)
+        const query = createGetRequestsQuery(getQuery(input)!.fields)
         const mocks = [
             {
                 request: {query},
@@ -547,7 +537,7 @@ describe('request input should create appropriate query object, get-entities que
             timestamp: 0,
             _id: "6", name: "6", currency: {name: "6", _id: "6", code: "6"}
         }
-        const query = createGetProxiesQuery(getQuery(input).fields)
+        const query = createGetProxiesQuery(getQuery(input)!.fields)
         const mocks = [
             {
                 request: {query},

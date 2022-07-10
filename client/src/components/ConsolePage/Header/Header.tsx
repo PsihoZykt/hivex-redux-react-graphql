@@ -17,7 +17,6 @@ const Header = ({fullScreen}: PropsType) => {
   }
   const navigate = useNavigate()
   let {user, changeUser} = useContext(CurrentUserContext)
-  // console.log(user)
 
   return (
     <div className="header">

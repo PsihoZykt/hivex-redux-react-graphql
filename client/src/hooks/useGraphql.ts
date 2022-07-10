@@ -8,44 +8,42 @@ import {
   SIGN_IN,
   SIGN_UP,
   UPDATE_USERS
-} from "components/ConsolePage/Footer/graphqlQueries/getUsers.graphql";
+} from "graphql/graphqlQueries/getUsers.graphql";
 import {
   ADD_CURRENCY,
   createGetCurrenciesQuery,
   DELETE_CURRENCIES,
   getCurrenciesQuery,
   UPDATE_CURRENCIES
-} from "components/ConsolePage/Footer/graphqlQueries/getCurrencies.graphql";
+} from "graphql/graphqlQueries/getCurrencies.graphql";
 import {
   ADD_MENTOR,
   createGetMentorsQuery,
   DELETE_MENTORS,
   getMentorsQuery,
   UPDATE_MENTORS
-} from "components/ConsolePage/Footer/graphqlQueries/getMentors.graphql";
+} from "graphql/graphqlQueries/getMentors.graphql";
 import {
   ADD_PROJECT,
   createGetProjectsQuery,
   DELETE_PROJECTS,
   getProjectsQuery,
   UPDATE_PROJECTS
-} from "components/ConsolePage/Footer/graphqlQueries/getProjects.graphql";
+} from "graphql/graphqlQueries/getProjects.graphql";
 import {
   ADD_PROXY,
   createGetProxiesQuery,
   DELETE_PROXIES,
   getProxiesQuery,
   UPDATE_PROXIES
-} from "components/ConsolePage/Footer/graphqlQueries/getProxies.graphql";
+} from "graphql/graphqlQueries/getProxies.graphql";
 import {
   ADD_REQUEST,
   createGetRequestsQuery,
   DELETE_REQUESTS,
   getRequestsQuery,
   UPDATE_REQUESTS
-} from "components/ConsolePage/Footer/graphqlQueries/getRequests.graphql";
-import {useContext} from "react";
-import {CurrentUserContext} from "components/ConsolePage/ConsolePage";
+} from "graphql/graphqlQueries/getRequests.graphql";
 
 
 export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
@@ -54,7 +52,6 @@ export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
       onCompleted(JSON.stringify(data, null, "\t"))
     }
   }
-
   const getUsersObj = useLazyQuery(createGetUsersQuery(queryFieldsArr), queryOptions)
   const getCurrenciesObj = useLazyQuery(createGetCurrenciesQuery(queryFieldsArr), queryOptions)
   const getMentorsObj = useLazyQuery(createGetMentorsQuery(queryFieldsArr), queryOptions)
@@ -79,33 +76,29 @@ export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
   const updateProjectsObj = useMutation(UPDATE_PROJECTS, queryOptions)
   const updateProxiesObj = useMutation(UPDATE_PROXIES, queryOptions)
   const updateRequestsObj = useMutation(UPDATE_REQUESTS, queryOptions)
-  const userFieldsObj = useLazyQuery(getUsersQuery)
-  const currencyFieldsObj = useLazyQuery(getCurrenciesQuery)
-  const mentorFieldsObj = useLazyQuery(getMentorsQuery)
-  const proxyFieldsObj = useLazyQuery(getProxiesQuery)
-  const requestFieldsObj = useLazyQuery(getRequestsQuery)
-  const projectFieldsObj = useLazyQuery(getProjectsQuery)
-  const authObj = useLazyQuery(AUTH)
-
-
-  let {changeUser} = useContext(CurrentUserContext)
+  const userFieldsObj = useLazyQuery(getUsersQuery, queryOptions)
+  const currencyFieldsObj = useLazyQuery(getCurrenciesQuery, queryOptions)
+  const mentorFieldsObj = useLazyQuery(getMentorsQuery, queryOptions)
+  const proxyFieldsObj = useLazyQuery(getProxiesQuery, queryOptions)
+  const requestFieldsObj = useLazyQuery(getRequestsQuery, queryOptions)
+  const projectFieldsObj = useLazyQuery(getProjectsQuery, queryOptions)
+  const authObj = useLazyQuery(AUTH, {onCompleted: (data) => console.log(data)})
   const signInObj = useMutation(SIGN_IN, {
     onCompleted: async (data) => {
       if (data) {
         onCompleted(JSON.stringify(data, null, "\t"))
         localStorage.setItem("token", data.signIn)
-        await authObj[0]()
-        console.log(authObj[1].data.auth)
-        await changeUser(authObj[1].data.auth)
+        await authObj[1].refetch()
       }
     }
   })
   const signUpObj = useMutation(SIGN_UP, {
-    onCompleted: (data) => {
+    onCompleted: async (data) => {
       console.log(data)
       if (data) {
         onCompleted(JSON.stringify(data, null, "\t"))
         localStorage.setItem("token", data.signUp)
+        await authObj[1].refetch()
       }
     }
   })
@@ -124,18 +117,21 @@ export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
     getProjects: {exec: getProjectsObj[0], data: getProjectsObj[1]},
     getProxies: {exec: getProxiesObj[0], data: getProxiesObj[1]},
     getRequests: {exec: getRequestsObj[0], data: getRequestsObj[1]},
+
     addUser: {exec: addUserObj[0], data: addUserObj[1]},
     addCurrency: {exec: addCurrencyObj[0], data: addCurrencyObj[1]},
     addMentor: {exec: addMentorObj[0], data: addMentorObj[1]},
     addProject: {exec: addProjectObj[0], data: addProjectObj[1]},
     addProxy: {exec: addProxyObj[0], data: addProxyObj[1]},
     addRequest: {exec: addRequestObj[0], data: addRequestObj[1]},
+
     deleteUsers: {exec: deleteUsersObj[0], data: deleteUsersObj[1]},
     deleteCurrencies: {exec: deleteCurrenciesObj[0], data: deleteCurrenciesObj[1]},
     deleteMentors: {exec: deleteMentorsObj[0], data: deleteMentorsObj[1]},
     deleteProjects: {exec: deleteProjectsObj[0], data: deleteProjectsObj[1]},
     deleteProxies: {exec: deleteProxiesObj[0], data: deleteProxiesObj[1]},
     deleteRequests: {exec: deleteRequestsObj[0], data: deleteRequestsObj[1]},
+
     updateUsers: {exec: updateUsersObj[0], data: updateUsersObj[1]},
     updateCurrencies: {exec: updateCurrenciesObj[0], data: updateCurrenciesObj[1]},
     updateMentors: {exec: updateMentorsObj[0], data: updateMentorsObj[1]},

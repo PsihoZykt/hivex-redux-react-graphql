@@ -1,4 +1,3 @@
-import {CommandNames, CommandType} from "components/ConsolePage/Footer/Commands/CommandTypes";
 import {
   getAddEntityMutation,
   getDeleteEntityMutation,
@@ -11,9 +10,9 @@ import {GraphQLProjectFieldType} from "types/EntityTypes/GraphQLProjectFieldType
 import {GraphQLProxyFieldType} from "types/EntityTypes/GraphQLProxyFieldType";
 import {GraphQLMentorFieldType} from "types/EntityTypes/GraphQLMentorFieldType";
 import {GraphQLRequestFieldType} from "types/EntityTypes/GraphQLRequestFieldType";
+import {CommandNames, CommandType} from "types/CommandTypes";
 
 export const validateRequest = (request: String) => {
-  let response = ""
   const requestParts = request.split(' ')
   let prefix = requestParts[0] as "hivex";
   let commandName = requestParts[1] as unknown as CommandNames
@@ -43,10 +42,14 @@ export const validateRequest = (request: String) => {
     query = getDeleteEntityMutation(request)
   } else if (command.commandName?.includes(("get"))) {
      query = getQuery(request)
+  } else if(command.commandName?.includes("sign")){
+    //TODO: sign-in/up validation
+    return;
   }
   if (!query?.fields) {
     error += "Write some fields after -values \n"
   }
+
 // oh boy don't do this https://stackoverflow.com/questions/55127004/how-to-transform-union-type-to-tuple-type
   // Convert Type to tuple
   type UnionToIntersection<U> =
@@ -73,7 +76,6 @@ export const validateRequest = (request: String) => {
   let mentorFields: GraphQLMentorsFieldTypeTuple = ["_id", "name", "salary", "workDuration", "level", "techStack", "country", "timestamp"]
   type GraphQLRequestsFieldTypeTuple = TuplifyUnion<GraphQLRequestFieldType>
   let requestFields: GraphQLRequestsFieldTypeTuple = ["_id", "request", "response", "createdAt"]
-  // TODO Короче доделать проверку, посмотреть нужно ли эни в юзерс типах, пофиксить футер где ругается на наллы
 
   let commandNames = Object.values(CommandNames)
   commandNames.forEach(e => {

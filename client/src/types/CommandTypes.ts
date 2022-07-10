@@ -1,6 +1,7 @@
 
 export enum CommandNames {
   GET_FIELDS = "get-fields",
+
   GET_USERS = "get-users",
   ADD_USER = "add-user",
   DELETE_USERS = "delete-users",
