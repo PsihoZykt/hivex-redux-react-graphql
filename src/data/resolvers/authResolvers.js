@@ -3,6 +3,22 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const authResolvers = {
+    Query: {
+        auth: async (root, {input}, context) => {
+            console.log("context is", context)
+            if (context.user) {
+                let user;
+                try {
+                    user = await Users.findById(context.user.id)
+                } catch (e){
+                    console.log(e)
+                }
+                console.log(user)
+                return user
+
+            } else return null
+        }
+    },
     Mutation: {
         signIn: async (root, {input}) => {
             let {email, password} = input
@@ -25,12 +41,14 @@ export const authResolvers = {
         },
         signUp: async (root, {input}) => {
             // normalize email address
-            let {email, password} = input
-            email = email.trim().toLowerCase();    // hash the password
-            const hashed = await bcrypt.hash(password, 10);
-            let user = await new Users({email: email, password: hashed})
+            let {email, name, password} = input
+            email = email.trim().toLowerCase();
+            name = name.trim().toLowerCase();
+            const hashed = await bcrypt.hash(password, 10); // hash the password
+            let user = await new Users({email, password: hashed, name})
             try {
                 await user.save()
+                console.log("user saved")
                 return jwt.sign({id: user._id}, "123", null, null);
 
             } catch (err) {

@@ -34,7 +34,7 @@ input UserInput {
 }
 input UserFilter {
     _id: ID,
-    email: String!
+    email: String
     name: String
     proxy: ProxyFilter,
     salary: Int,
@@ -46,7 +46,7 @@ input UserFilter {
 }
 input UserSetFilter {
     name: String
-    email: String!
+    email: String
     proxy: ProxyFilter,
     salary: Int,
     workDuration: Int,
@@ -59,12 +59,18 @@ input UpdateUsersInput {
     filter: UserFilter!
     set: UserSetFilter
 }
-input AuthInput {
+input SignUpInput {
+    name: String!,
+    email: String!
+    password: String!
+}
+input SignInInput {
     email: String!
     password: String!
 }
 type Query {
     getUsers(input: UserFilter): [User]
+    auth: User
 }
 
 
@@ -72,6 +78,6 @@ type Query {
      deleteUsers(input: UserFilter): [User]
      updateUsers(input: UpdateUsersInput): [User]
      addUser(input: UserInput): User
-     signUp(input: AuthInput!): String!
-     signIn(input: AuthInput!): String!
+     signUp(input: SignUpInput!): String!
+     signIn(input: SignInInput!): String!
  }

@@ -16,7 +16,6 @@ import {proxyResolvers} from "./data/resolvers/proxyResolvers.js";
 import {requestResolvers} from "./data/resolvers/requestResolvers.js";
 import {authResolvers} from "./data/resolvers/authResolvers.js";
 import jwt from "jsonwebtoken";
-import {Users} from "./db/dbConnector.js";
 
 
 export const __filename = fileURLToPath(import.meta.url);
@@ -50,6 +49,20 @@ const server = new ApolloServer({
     schema: schemaWithResolvers,
     csrfPrevention: true,
     cache: 'bounded',
+    context: ({req}) => {
+        // Get the user token from the headers.
+        const token = req.headers.authorization.split(" ")[1] || '';
+        // Try to retrieve a user with the token
+        console.log(token)
+        let user;
+        try {
+            user = getUser(token);
+        } catch (e) {
+            console.log(e)
+        }
+        // Add the user to the context
+        return {user};
+    },
 });
 
 /**
@@ -72,5 +85,4 @@ app.listen({port: PORT}, () => {
     console.log(
         `Server is running at http://localhost:${PORT}${server.graphqlPath}`
     );
-
 });

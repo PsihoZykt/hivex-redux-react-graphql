@@ -31,6 +31,9 @@ export enum CommandNames {
   DELETE_REQUESTS = "delete-requests",
   UPDATE_REQUESTS = "update-requests",
 
+  SIGN_IN = "sign-in",
+  SIGN_UP = "sign-up"
+
 }
 
 export enum Fields {

@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useContext, useEffect} from 'react'
 import Logo from 'common/Logo/Logo'
 import maximize from 'assets/img/consolePage/maximize.svg'
 import minimize from 'assets/img/consolePage/minimize.svg'
 import './Header.css'
 import {useNavigate} from 'react-router-dom'
 import {FullScreenHandle} from 'react-full-screen'
+import {CurrentUserContext} from "components/ConsolePage/ConsolePage";
 
 type OwnProps = {
   fullScreen: FullScreenHandle,
@@ -15,7 +16,8 @@ const Header = ({fullScreen}: PropsType) => {
     fullScreen.active ? fullScreen.exit() : fullScreen.enter()
   }
   const navigate = useNavigate()
-
+  let {user, changeUser} = useContext(CurrentUserContext)
+  // console.log(user)
 
   return (
     <div className="header">
@@ -24,6 +26,9 @@ const Header = ({fullScreen}: PropsType) => {
         <div> API-консолька</div>
       </div>
       <div className="header__right">
+        <div>
+          {user?.email}
+        </div>
         <img
           tabIndex={1}
           onClick={handleFullScreen}

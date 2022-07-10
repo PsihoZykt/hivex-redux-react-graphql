@@ -1,6 +1,6 @@
 import GithubLink from 'common/GithubLink/GithubLink'
 import format from 'assets/img/consolePage/format.svg'
-import React, {Dispatch, useState} from 'react'
+import React, {Dispatch, useContext, useState} from 'react'
 import './Footer.css'
 import {
   getAddEntityMutation,
@@ -21,6 +21,7 @@ import {GraphQLProxyFieldType} from "types/EntityTypes/GraphQLProxyFieldType";
 import {GraphQLRequestFieldType} from "types/EntityTypes/GraphQLRequestFieldType";
 import {useGraphQL} from "components/ConsolePage/Footer/useGraphql";
 import {validateRequest} from "components/ConsolePage/Console/Request/validateRequest";
+import {CurrentUserContext} from "components/ConsolePage/ConsolePage";
 
 type FooterProps = {
   request: String
@@ -31,7 +32,6 @@ type FooterProps = {
 export const Footer = ({request, setResponse}: FooterProps) => {
   const [queryFieldsArr, setQueryFieldsArr] = useState<GraphqlAnyEntityFieldType[]>(["name"])
   const graphql = useGraphQL(queryFieldsArr, setResponse)
-
   let entitiesData = [graphql.getCurrencyFields.data,
     graphql.getProjectFields.data,
     graphql.getProxyFields.data,
@@ -56,6 +56,7 @@ export const Footer = ({request, setResponse}: FooterProps) => {
     let commandName = requestParts[1] as unknown as CommandNames
     let valuesKey = requestParts[2] as "-values"
     let requestError = validateRequest(request)
+    // let requestError = "das"
     let command: CommandType = {
       prefix, commandName, valuesKey,
     }
@@ -215,16 +216,32 @@ export const Footer = ({request, setResponse}: FooterProps) => {
               }
               case CommandNames.UPDATE_CURRENCIES: {
                 let mutation = getUpdateEntityMutation<GraphQLCurrencyFieldType>(request)
-                await graphql.updateCurrencies.exec({variables: {input: {filter: mutation?.filter, set: mutation?.set}}})
+                await graphql.updateCurrencies.exec({
+                  variables: {
+                    input: {
+                      filter: mutation?.filter,
+                      set: mutation?.set
+                    }
+                  }
+                })
                 break;
               }
             }
           }
         }
-      } else {
-        setResponse(requestError)
+      } else if (requestParts[0] === "sign-in") {
+        let [,email, password] = requestParts
+        await graphql.signIn.exec({variables: {input: {email, password}}})
+        await console.log(graphql.signIn.data.data)
+      } else if (requestParts[0] === "sign-up") {
+        let [, email, name, password] = requestParts
+        await graphql.signUp.exec({variables: {input: {email, name, password}}})
+        await console.log(graphql.signUp.data.data)
       }
-    } catch (e) {
+      else
+        setResponse(requestError)
+
+      } catch (e) {
       console.log(e)
     }
   }
@@ -253,4 +270,5 @@ export const Footer = ({request, setResponse}: FooterProps) => {
   )
 }
 
-export default Footer
+
+  export default Footer

@@ -1,40 +1,51 @@
 import {MutationHookOptions, useLazyQuery, useMutation} from "@apollo/client";
 import {
   ADD_USER,
+  AUTH,
   createGetUsersQuery,
-  DELETE_USERS, getUsersQuery,
+  DELETE_USERS,
+  getUsersQuery,
+  SIGN_IN,
+  SIGN_UP,
   UPDATE_USERS
 } from "components/ConsolePage/Footer/graphqlQueries/getUsers.graphql";
 import {
   ADD_CURRENCY,
   createGetCurrenciesQuery,
-  DELETE_CURRENCIES, getCurrenciesQuery,
+  DELETE_CURRENCIES,
+  getCurrenciesQuery,
   UPDATE_CURRENCIES
 } from "components/ConsolePage/Footer/graphqlQueries/getCurrencies.graphql";
 import {
   ADD_MENTOR,
   createGetMentorsQuery,
-  DELETE_MENTORS, getMentorsQuery,
+  DELETE_MENTORS,
+  getMentorsQuery,
   UPDATE_MENTORS
 } from "components/ConsolePage/Footer/graphqlQueries/getMentors.graphql";
 import {
   ADD_PROJECT,
   createGetProjectsQuery,
-  DELETE_PROJECTS, getProjectsQuery,
+  DELETE_PROJECTS,
+  getProjectsQuery,
   UPDATE_PROJECTS
 } from "components/ConsolePage/Footer/graphqlQueries/getProjects.graphql";
 import {
   ADD_PROXY,
   createGetProxiesQuery,
-  DELETE_PROXIES, getProxiesQuery,
+  DELETE_PROXIES,
+  getProxiesQuery,
   UPDATE_PROXIES
 } from "components/ConsolePage/Footer/graphqlQueries/getProxies.graphql";
 import {
   ADD_REQUEST,
   createGetRequestsQuery,
-  DELETE_REQUESTS, getRequestsQuery,
+  DELETE_REQUESTS,
+  getRequestsQuery,
   UPDATE_REQUESTS
 } from "components/ConsolePage/Footer/graphqlQueries/getRequests.graphql";
+import {useContext} from "react";
+import {CurrentUserContext} from "components/ConsolePage/ConsolePage";
 
 
 export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
@@ -74,11 +85,35 @@ export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
   const proxyFieldsObj = useLazyQuery(getProxiesQuery)
   const requestFieldsObj = useLazyQuery(getRequestsQuery)
   const projectFieldsObj = useLazyQuery(getProjectsQuery)
+  const authObj = useLazyQuery(AUTH)
+
+
+  let {changeUser} = useContext(CurrentUserContext)
+  const signInObj = useMutation(SIGN_IN, {
+    onCompleted: async (data) => {
+      if (data) {
+        onCompleted(JSON.stringify(data, null, "\t"))
+        localStorage.setItem("token", data.signIn)
+        await authObj[0]()
+        console.log(authObj[1].data.auth)
+        await changeUser(authObj[1].data.auth)
+      }
+    }
+  })
+  const signUpObj = useMutation(SIGN_UP, {
+    onCompleted: (data) => {
+      console.log(data)
+      if (data) {
+        onCompleted(JSON.stringify(data, null, "\t"))
+        localStorage.setItem("token", data.signUp)
+      }
+    }
+  })
 
   return {
     getUserFields: {exec: userFieldsObj[0], data: userFieldsObj[1]},
     getCurrencyFields: {exec: currencyFieldsObj[0], data: currencyFieldsObj[1]},
-    getMentorFields: {exec:  mentorFieldsObj[0], data: mentorFieldsObj[1]},
+    getMentorFields: {exec: mentorFieldsObj[0], data: mentorFieldsObj[1]},
     getProxyFields: {exec: proxyFieldsObj[0], data: proxyFieldsObj[1]},
     getRequestFields: {exec: requestFieldsObj[0], data: requestFieldsObj[1]},
     getProjectFields: {exec: projectFieldsObj[0], data: projectFieldsObj[1]},
@@ -107,5 +142,9 @@ export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
     updateProjects: {exec: updateProjectsObj[0], data: updateProjectsObj[1]},
     updateProxies: {exec: updateProxiesObj[0], data: updateProxiesObj[1]},
     updateRequests: {exec: updateRequestsObj[0], data: updateRequestsObj[1]},
+
+    signIn: {exec: signInObj[0], data: signInObj[1]},
+    signUp: {exec: signUpObj[0], data: signUpObj[1]},
+    auth: {exec: authObj[0], data: authObj[1]}
   }
 }

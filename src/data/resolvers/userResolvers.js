@@ -8,11 +8,14 @@ import {
 
 export const userResolvers = {
     Query: {
-        getUsers: async (root, {input}) => {
+        getUsers: async (root, {input}, context) => {
+            console.log(context)
             let users = await Users.find()
                 .populate({path: "project", populate: {path: "mentor"}}).lean()
             return getFilteredEntity(users, input)
-        }
+        },
+
+
     },
     Mutation: {
         deleteUsers: async (root, {input}) => {
