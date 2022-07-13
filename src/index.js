@@ -19,14 +19,14 @@ import jwt from "jsonwebtoken";
 
 
 
-
+// Because of es6 syntax had to add it
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 /**
  * Create an Apollo server instance.
  */
+// load files and merge them into a single schema object
 const schema = await loadSchema(path.join(__dirname, "./data/schemas", "*.gql"), {
-    // load files and merge them into a single schema object
     loaders: [new GraphQLFileLoader()]
 })
 const resolvers = _.merge(userResolvers, currencyResolvers, mentorResolvers, projectResolvers, proxyResolvers, requestResolvers, authResolvers)
@@ -53,7 +53,7 @@ const server = new ApolloServer({
     csrfPrevention: true,
     cache: 'bounded',
     context: ({req}) => {
-        // Get the user token from the headers.
+        // Get the user token from the headers. ( Split because auth.header is "Bearer token" )
         const token = req.headers.authorization.split(" ")[1] || '';
         // Try to retrieve a user with the token
         let user;
