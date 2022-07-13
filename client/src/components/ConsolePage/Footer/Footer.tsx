@@ -12,8 +12,11 @@ type FooterProps = {
   setResponse: Dispatch<string>
 }
 export const Footer = ({request, setResponse}: FooterProps) => {
+  // This state used in getQuery with dynamical return fields
   const [queryFieldsArr, setQueryFieldsArr] = useState<GraphqlAnyEntityFieldType[]>(["name"])
   const graphql = useGraphQL(queryFieldsArr, setResponse, request)
+
+  // Set loading if any graphql request is loading
   Object.values(graphql).forEach(command => {
     if (command.data.loading) setResponse("Loading...")
     else if (command.data.error) console.log(command.data.error)
@@ -21,7 +24,6 @@ export const Footer = ({request, setResponse}: FooterProps) => {
   const onSubmitRequest = async () => {
 
     let requestError = validateRequest(request)
-    // let requestError = false
 
     try {
       if (!requestError) {
