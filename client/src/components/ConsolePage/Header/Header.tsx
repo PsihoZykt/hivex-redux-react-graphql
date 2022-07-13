@@ -6,6 +6,7 @@ import './Header.css'
 import {useNavigate} from 'react-router-dom'
 import {FullScreenHandle} from 'react-full-screen'
 import {CurrentUserContext} from "components/ConsolePage/ConsolePage";
+import {UserType} from "types/EntityTypes/EntityTypes";
 
 type OwnProps = {
   fullScreen: FullScreenHandle,
@@ -15,8 +16,7 @@ const Header = ({fullScreen}: PropsType) => {
   const handleFullScreen = () => {
     fullScreen.active ? fullScreen.exit() : fullScreen.enter()
   }
-  const navigate = useNavigate()
-  let {user, changeUser} = useContext(CurrentUserContext)
+  let {user}  = useContext(CurrentUserContext)
 
   return (
     <div className="header">

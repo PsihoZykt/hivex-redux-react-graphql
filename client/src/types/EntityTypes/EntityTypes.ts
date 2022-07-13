@@ -16,10 +16,10 @@ export enum Level {
   MIDDLE = "middle",
   SENIOR = "senior"
 }
-// TODO: походу эни придется убрать
 // Any placed with purpose! With strings it doesn't work correctly for some reasons
-// When I get Keys of Types and exclude object from these types, I can't use an array of union type with strings
+// When I get Keys of Types and exclude object from these types, I can't use tuplify  union from './GraphqlFields'
 export interface UserType  {
+  email: String | any,
   _id: String | any,
   name: String | any,
   salary: number

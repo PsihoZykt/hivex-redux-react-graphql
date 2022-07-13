@@ -18,12 +18,9 @@ const env = process.env.NODE_ENV || "development";
 mongoose.connect(environment[env].dbString, {
     useNewUrlParser: true,
     useUnifiedTopology: true
+}, (error) => {
+    if (error) throw new Error(error)
 });
-
-mongoose.connection.on('error', () => {
-    console.error("Error while connecting to DB");
-});
-
 
 const Users = mongoose.model('Users', userSchema)
 const Projects = mongoose.model('Projects', projectSchema)

@@ -14,6 +14,9 @@ import {GraphQLProxyFieldType} from "types/EntityTypes/GraphQLProxyFieldType";
 import {GraphQLRequestFieldType} from "types/EntityTypes/GraphQLRequestFieldType";
 import {GraphqlAnyEntityFieldType} from "types/EntityTypes/EntityTypes";
 
+
+// Parse a request string, run corresponding graphql request
+// All on-complete operations contain in useGraphql hook
 export const runRequestGraphql = async (request: String, graphql: any, setQueryFieldsArr: React.Dispatch<React.SetStateAction<GraphqlAnyEntityFieldType[]>>) => {
   const requestParts = request.split(' ')
   let prefix = requestParts[0] as "hivex";

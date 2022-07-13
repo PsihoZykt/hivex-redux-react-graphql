@@ -1,11 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react'
 import './RequestHistory.css'
 import clear from 'assets/img/consolePage/clear.svg'
+import {useQuery} from "@apollo/client";
+import {getRequestsQuery} from "graphql/graphqlQueries/getRequests.graphql";
+import RequestHistoryItem from "components/ConsolePage/RequestHistory/RequestHistoryItem/RequestHistoryItem";
 
 
 const RequestHistory = () => {
   const elRef = useRef<HTMLDivElement>(null)
   const [scroll, setScroll] = useState(false)
+  let {data, loading} = useQuery(getRequestsQuery)
+  // TODO: Make it works. Update after every request, ability to remove etc. And make it looks good
   useEffect(() => {
     const el = elRef.current
     if (el) {
@@ -32,7 +37,9 @@ const RequestHistory = () => {
   return (
     <div className="history-wrapper">
       <div ref={elRef} className={`history `}>
-
+        { data?.getRequests.map((request: any) => {
+          return <RequestHistoryItem request={request}/>
+        })}
       </div>
       <div
         className={`history__clear ${scroll ? 'scrolling' : ''}`}

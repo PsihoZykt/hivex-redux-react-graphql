@@ -10,9 +10,9 @@ type QueryGetUsersType<T extends GraphqlAnyEntityFieldType> = {
   fields: T[]
   filter: Object
 }
-
-export const getQuery = <T extends GraphqlAnyEntityFieldType>(input: String): QueryGetUsersType<T> | null => {
-  const values = getValues(input)
+// Get query object from request string
+export const getQuery = <T extends GraphqlAnyEntityFieldType>(request: String): QueryGetUsersType<T> | null => {
+  const values = getValues(request)
   if (values) {
     let fieldsWithFilters = getFieldsWithFiltersFromValues(values)
     let queryArr = getQueryArr(fieldsWithFilters)
@@ -28,6 +28,7 @@ export const getAddEntityMutation = <T extends GraphqlAnyEntityFieldType>(reques
     return getQueryObjFromQueryArr<T>(mutations)
   } else return null
 }
+
 export const getDeleteEntityMutation = <T extends GraphqlAnyEntityFieldType>(request: String): QueryGetUsersType<T> | null => {
   const values = getValues(request)
   if (values) {
@@ -51,10 +52,13 @@ export let getUpdateEntityMutation = <T extends GraphqlAnyEntityFieldType>(reque
     return {filter: filterObj.filter, set: setObj.filter}
   } else return null
 }
-
+//Get array of actual fields from values string
+// Example, "name -f 123 | project.name -f 123" => ["name -f 123", "project.name -f 123"]
 export const getFieldsWithFiltersFromValues = (values: String): String[] => {
   return values.split("|").map((e: string) => e.trim())
 }
+// Get array of query object from fields array.
+// Example, ["name -f 123", "project.name -f 123"] => [{field: "name", filter: "123"}, {field: "project.name", filter: "123"}]
 export const getQueryArr = (fieldsWithFilters: String[], type = "-f"): Array<QueryType> => {
   let queryArr: Array<QueryType> = []
   fieldsWithFilters.forEach((e: String) => {
@@ -67,6 +71,8 @@ export const getQueryArr = (fieldsWithFilters: String[], type = "-f"): Array<Que
   })
   return queryArr
 }
+
+//Map dotted field name like "project.mentor.name" to "project{mentor{name}}" so it can be used in graphql requests
 export const getGraphqlFieldsFromObj = <T extends GraphqlAnyEntityFieldType>(input: String[]): T[] => {
   let inputArr: String[] = [...input];
   let fieldsArr: T[] = inputArr as T[]
@@ -82,6 +88,9 @@ export const getGraphqlFieldsFromObj = <T extends GraphqlAnyEntityFieldType>(inp
   })
   return fieldsArr
 }
+
+// Example: [{field: "name", filter: "11"}] => {fields: ["name"], filter: {name: "11"}}
+
 export const getQueryObjFromQueryArr = <T extends GraphqlAnyEntityFieldType>(queryArr: Array<QueryType>): QueryGetUsersType<T> => {
   let fieldsArr: String[] = []
   let queryObj: any = {}
@@ -97,7 +106,7 @@ export const getQueryObjFromQueryArr = <T extends GraphqlAnyEntityFieldType>(que
 
 }
 
-
+// Get actual values from request string
 export const getValues = (request: String) => {
   if (request.includes("-values")) {
     return request.split('-values')[1]

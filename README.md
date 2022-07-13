@@ -49,3 +49,7 @@ Available commands:
 - hivex update-[entities] -values [field] -f [filter] | ... -set [field]=[updatedValue]
 
   (example: hivex update-currencies -values name-f 1 | -set code=1)
+
+
+TODO: 
+Complete sign-in/up resolvers on server (Check if email already is registered, check if email is correct, etc)

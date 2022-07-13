@@ -8,18 +8,13 @@ import {
 
 export const requestResolvers = {
     Query: {
-
-
         getRequests: async (root, {input}) => {
             let requests = await Requests.find().lean()
             return getFilteredEntity(requests, input)
         }
     },
     Mutation: {
-
-
         addRequest: async (root, {input}) => {
-
             input.createdAt = new Date();
             return await mongoDBAddEntityResolver(Requests, root, input)
         },

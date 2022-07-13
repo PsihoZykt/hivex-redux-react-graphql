@@ -46,10 +46,13 @@ import {
 } from "graphql/graphqlQueries/getRequests.graphql";
 
 
-export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
+export const useGraphQL = (queryFieldsArr: any, onCompleted: any, request: String) => {
+  const addRequestObj = useMutation(ADD_REQUEST)
+
   const queryOptions: MutationHookOptions = {
     errorPolicy: "all", onCompleted: (data: any) => {
       onCompleted(JSON.stringify(data, null, "\t"))
+      addRequestObj[0]({variables: {input: {request: request, response: JSON.stringify(data, null, "\t"), createdAt: Date.now()}}})
     }
   }
   const getUsersObj = useLazyQuery(createGetUsersQuery(queryFieldsArr), queryOptions)
@@ -63,7 +66,6 @@ export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
   const addMentorObj = useMutation(ADD_MENTOR, queryOptions)
   const addProjectObj = useMutation(ADD_PROJECT, queryOptions)
   const addProxyObj = useMutation(ADD_PROXY, queryOptions)
-  const addRequestObj = useMutation(ADD_REQUEST, queryOptions)
   const deleteUsersObj = useMutation(DELETE_USERS, queryOptions)
   const deleteCurrenciesObj = useMutation(DELETE_CURRENCIES, queryOptions)
   const deleteMentorsObj = useMutation(DELETE_MENTORS, queryOptions)
@@ -123,7 +125,7 @@ export const useGraphQL = (queryFieldsArr: any, onCompleted: any) => {
     addMentor: {exec: addMentorObj[0], data: addMentorObj[1]},
     addProject: {exec: addProjectObj[0], data: addProjectObj[1]},
     addProxy: {exec: addProxyObj[0], data: addProxyObj[1]},
-    addRequest: {exec: addRequestObj[0], data: addRequestObj[1]},
+    // addRequest: {exec: addRequestObj[0], data: addRequestObj[1]},
 
     deleteUsers: {exec: deleteUsersObj[0], data: deleteUsersObj[1]},
     deleteCurrencies: {exec: deleteCurrenciesObj[0], data: deleteCurrenciesObj[1]},

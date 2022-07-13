@@ -1,11 +1,9 @@
 import {Users} from "../../db/dbConnector.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
 export const authResolvers = {
     Query: {
         auth: async (root, {input}, context) => {
-            console.log("context is", context)
             if (context.user) {
                 let user;
                 try {

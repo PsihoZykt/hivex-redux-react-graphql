@@ -6,15 +6,10 @@ import {Currencies, Mentors, Projects, Proxies, Requests, Users} from "../db/dbC
 
 
 // Add item to Entity collection
-export const mongoDBAddEntityResolver = (Entity, _root, input) => {
+export const mongoDBAddEntityResolver = async (Entity, _root, input) => {
   const newItem = new Entity({...input});
-  return new Promise((resolve, reject) => {
-    newItem.save((err, item) => {
-      if (err) {
-        reject(err);
-      } else resolve(item);
-    });
-  });
+ return await newItem.save()
+
 }
 export const mongoDBDeleteEntitiesResolver = async (Entity, _root, input) => {
   const isFilter = Object.keys(input).length !== 0;
@@ -26,7 +21,6 @@ export const mongoDBDeleteEntitiesResolver = async (Entity, _root, input) => {
 }
 export const mongoDBUpdateEntitiesResolver = async (Entity, _root, input) => {
   let {filter, set} = input
-  console.log(input)
   const isFilter = Object.keys(filter).length !== 0;
   if (isFilter) {
     await Entity.updateMany(filter, {$set: set})
@@ -37,40 +31,20 @@ export const mongoDBUpdateEntitiesResolver = async (Entity, _root, input) => {
 export const resolvers = {
   Query: {
 
-    getProjects: async () => {
-      return new Promise((resolve, reject) => {
-        Projects.find().populate("mentor").then((entity) => {
-          resolve(entity)
-        }).catch((e) => reject(e))
-      })
+    getProjects: () => {
+      return Projects.find().populate("mentor");
     },
-    getMentors: async () => {
-      return new Promise((resolve, reject) => {
-        Mentors.find().then((entity) => {
-          resolve(entity)
-        }).catch((e) => reject(e))
-      })
+    getMentors: () => {
+      return Mentors.find()
     },
-    getCurrencies: async () => {
-      return new Promise((resolve, reject) => {
-        Currencies.find().then((entity) => {
-          resolve(entity)
-        }).catch((e) => reject(e))
-      })
+    getCurrencies: () => {
+      return Currencies.find()
     },
-    getProxies: async () => {
-      return new Promise((resolve, reject) => {
-        Proxies.find().populate("currency").then((entity) => {
-          resolve(entity)
-        }).catch((e) => reject(e))
-      })
+    getProxies: () => {
+      return Proxies.find().populate("currency")
     },
-    getRequests: async () => {
-      return new Promise((resolve, reject) => {
-        Requests.find().then((entity) => {
-          resolve(entity)
-        }).catch((e) => reject(e))
-      })
+    getRequests: () => {
+      return Requests.find();
     }
   },
   Mutation: {
@@ -95,10 +69,10 @@ export const resolvers = {
       return await mongoDBAddEntityResolver(Requests, root, input)
     },
     deleteUser: async (root, {input}) => {
-      return await mongoDBDeleteUserResolver(Users, root, input)
+      return await mongoDBDeleteEntitiesResolver(Users, root, input)
     },
     updateUsers: async (root, {input}) => {
-      return await mongoDBUpdateUsersResolver(Users, root, input)
+      return await mongoDBUpdateEntitiesResolver(Users, root, input)
     },
     addUser: async (root, {input}) => {
       return await mongoDBAddEntityResolver(Users, root, input)

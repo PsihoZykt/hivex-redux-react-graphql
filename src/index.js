@@ -18,6 +18,8 @@ import {authResolvers} from "./data/resolvers/authResolvers.js";
 import jwt from "jsonwebtoken";
 
 
+
+
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 /**
@@ -29,6 +31,7 @@ const schema = await loadSchema(path.join(__dirname, "./data/schemas", "*.gql"),
 })
 const resolvers = _.merge(userResolvers, currencyResolvers, mentorResolvers, projectResolvers, proxyResolvers, requestResolvers, authResolvers)
 // get the user info from a JWT
+// TODO: create some config file for jwt config, replace 123 with correct token from this config
 const getUser = token => {
     if (token) {
         try {
@@ -53,7 +56,6 @@ const server = new ApolloServer({
         // Get the user token from the headers.
         const token = req.headers.authorization.split(" ")[1] || '';
         // Try to retrieve a user with the token
-        console.log(token)
         let user;
         try {
             user = getUser(token);

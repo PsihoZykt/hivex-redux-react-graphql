@@ -23,7 +23,7 @@ export const createGetRequestsQuery = <T extends GraphqlAnyEntityFieldType>(fiel
 
 }
 
-export const ADD_REQUEST = gql`mutation GetRequests($input: RequestInput) {
+export const ADD_REQUEST = gql`mutation AddRequest($input: RequestInput) {
     addRequest(input: $input) {
         _id, createdAt,request,response
     }

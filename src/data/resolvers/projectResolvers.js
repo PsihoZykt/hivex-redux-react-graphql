@@ -8,13 +8,12 @@ import {
 
 export const projectResolvers = {
     Query: {
-
         getProjects: async (root, {input}) => {
             let projects = await Projects.find().populate({path: "mentor"}).lean()
             return getFilteredEntity(projects, input)
         },
-
     },
+
     Mutation: {
 
         addProject: async (root, {input}) => {

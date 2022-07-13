@@ -11,17 +11,16 @@ import {UserType} from "types/EntityTypes/EntityTypes";
 import {AUTH} from "graphql/graphqlQueries/getUsers.graphql";
 
 export const CurrentUserContext = React.createContext({
-    user: {} ,
+    user: null as UserType | null ,
     changeUser: (currentUser: UserType) => {
     }
   }
 )
 
 const ConsolePage = () => {
-  //Don't know yet how to handle pass values between components without store, so just pass it with props
-  const [request, setRequest] = useState(`dsadsa`)
+  const [request, setRequest] = useState(`hivex get-fields -values users`)
   const [response, setResponse] = useState("")
-  const [currentUser, changeCurrentUser] = useState({})
+  const [currentUser, changeCurrentUser] = useState(null as UserType | null)
   let [authFunc] = useLazyQuery(AUTH, {
     onCompleted: (data) => {
       changeCurrentUser(data.auth)
@@ -31,13 +30,9 @@ const ConsolePage = () => {
    authFunc()
   }, [authFunc])
 
-// Server side is done ( only need to move gwt-token to file)
-  // Need to pass current user via context to header
   const fullScreen = useFullScreenHandle()
   return (
     <CurrentUserContext.Provider value={{user: currentUser, changeUser: changeCurrentUser}}>
-
-
       <FullScreen handle={fullScreen}>
         <div className="console-page">
           <Header fullScreen={fullScreen}/>

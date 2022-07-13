@@ -8,19 +8,13 @@ import {
 
 export const proxyResolvers = {
     Query: {
-
-
         getProxies: async (root, {input}) => {
-            console.log(input)
             let proxies = await Proxies.find().populate({path: "currency"}).lean()
             return getFilteredEntity(proxies, input)
-
         },
-
     },
+
     Mutation: {
-
-
         addProxy: async (root, {input}) => {
             return await mongoDBAddEntityResolver(Proxies, root, input)
         },
@@ -30,8 +24,5 @@ export const proxyResolvers = {
         updateProxies: async (root, {input}) => {
             return await mongoDBUpdateEntitiesResolver(Proxies, root, input)
         },
-
-
-
     },
 };

@@ -8,15 +8,14 @@ import {
 
 
 export const mentorResolvers = {
+
     Query: {
-
-
         getMentors: async (root, {input}) => {
             let mentors = await Mentors.find().lean()
             return getFilteredEntity(mentors, input)
         },
-
     },
+
     Mutation: {
 
         addMentor: async (root, {input}) => {

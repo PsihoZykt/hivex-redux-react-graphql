@@ -13,7 +13,7 @@ type FooterProps = {
 }
 export const Footer = ({request, setResponse}: FooterProps) => {
   const [queryFieldsArr, setQueryFieldsArr] = useState<GraphqlAnyEntityFieldType[]>(["name"])
-  const graphql = useGraphQL(queryFieldsArr, setResponse)
+  const graphql = useGraphQL(queryFieldsArr, setResponse, request)
   Object.values(graphql).forEach(command => {
     if (command.data.loading) setResponse("Loading...")
     else if (command.data.error) console.log(command.data.error)
